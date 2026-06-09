@@ -24,16 +24,21 @@ export function usuarioToCandidate(usuario: Usuario): Candidate {
 }
 
 export async function getAvailableCandidates(max = 12): Promise<Candidate[]> {
-  const db = getAdminDb();
+  try {
+    const db = getAdminDb();
 
-  const snap = await db
-    .collection(COLLECTIONS.USUARIOS)
-    .where("rol", "==", "candidato")
-    .where("disponibilidad_inmediata", "==", true)
-    .limit(max)
-    .get();
+    const snap = await db
+      .collection(COLLECTIONS.USUARIOS)
+      .where("rol", "==", "candidato")
+      .where("disponibilidad_inmediata", "==", true)
+      .limit(max)
+      .get();
 
-  return snap.docs.map((doc) =>
-    usuarioToCandidate({ uid: doc.id, ...doc.data() } as Usuario),
-  );
+    return snap.docs.map((doc) =>
+      usuarioToCandidate({ uid: doc.id, ...doc.data() } as Usuario),
+    );
+  } catch (error) {
+    console.error("[getAvailableCandidates]", error);
+    return [];
+  }
 }

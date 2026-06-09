@@ -195,6 +195,7 @@
         "post": "Unlimited job listings",
         "unlocks": "10 candidate unlocks/month (CV, voice, contact)",
         "filters": "Language & sport modality filters",
+        "ai": "KI-Stellengenerator",
         "badge": "Basic listing badge"
       }
     },
@@ -207,6 +208,8 @@
         "unlocks": "Unlimited candidate unlocks",
         "emergency": "Emergency Radar (immediate availability)",
         "couples": "Couples & double-room filter",
+        "video": "15-Sekunden-Vorstellungsvideo",
+        "antiFugas": "Anti-Abwanderung-Tag (abgeschlossene Saisons)",
         "chat": "Unlimited real-time chat"
       }
     },
@@ -217,6 +220,7 @@
       "features": {
         "allPro": "Everything in Pro, unlimited",
         "featured": "3 featured job offers/month",
+        "ats": "ATS-Export in Ihre HR-Software",
         "alerts": "E-Mail-Alerts für Top-Kandidaten",
         "verified": "Nevajobs-verified candidates filter",
         "support": "Priority WhatsApp support",
