@@ -15,6 +15,12 @@
   "a11y": {
     "scrollToTop": "Volver arriba"
   },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La ruta que buscas no existe o la oferta ya no está disponible.",
+    "backHome": "Volver al inicio",
+    "browseJobs": "Ver empleos"
+  },
   "hero": {
     "badge": "Profesionales serios · Sector privado de la nieve",
     "titleBefore": "Encuentra tu próximo",

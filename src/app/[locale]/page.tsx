@@ -7,7 +7,7 @@ import { HomeJobsSection } from "@/components/home/HomeJobsSection";
 import { AvailableCandidates } from "@/components/home/AvailableCandidates";
 import { Pricing } from "@/components/home/Pricing";
 import { getLiveStatsFresh } from "@/lib/data/live-stats-server";
-import { getActiveOfertas } from "@/lib/data/ofertas";
+import { getActiveOfertas } from "@/lib/data/ofertas-server";
 import { getAvailableCandidates } from "@/lib/data/candidates";
 
 export const revalidate = 60;

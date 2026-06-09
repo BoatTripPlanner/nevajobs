@@ -15,6 +15,12 @@
   "a11y": {
     "scrollToTop": "Nach oben"
   },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Die gesuchte Seite existiert nicht oder die Stelle ist nicht mehr verfügbar.",
+    "backHome": "Zur Startseite",
+    "browseJobs": "Jobs ansehen"
+  },
   "hero": {
     "badge": "Seriöse Fachkräfte · Privater Schneesektor",
     "titleBefore": "Finde deinen nächsten",

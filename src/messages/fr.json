@@ -15,6 +15,12 @@
   "a11y": {
     "scrollToTop": "Retour en haut"
   },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page demandée n'existe pas ou l'offre n'est plus disponible.",
+    "backHome": "Retour à l'accueil",
+    "browseJobs": "Voir les offres"
+  },
   "hero": {
     "badge": "Professionnels sérieux · Secteur privé de la neige",
     "titleBefore": "Trouvez votre prochain",

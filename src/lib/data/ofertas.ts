@@ -1,13 +1,3 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  query,
-  where,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { COLLECTIONS, type Oferta } from "@/types";
 import { categoriaFromFirestore } from "@/types/mappers";
 import type { Job } from "@/types/job";
@@ -28,24 +18,3 @@ export function ofertaToJob(oferta: Oferta): Job {
   };
 }
 
-export async function getActiveOfertas(max = 50): Promise<Job[]> {
-  const q = query(
-    collection(db, COLLECTIONS.OFERTAS),
-    where("activa", "==", true),
-    limit(max),
-  );
-
-  const snap = await getDocs(q);
-
-  const jobs = snap.docs.map((doc) =>
-    ofertaToJob({ id: doc.id, ...doc.data() } as Oferta),
-  );
-
-  return jobs.sort((a, b) => a.title.localeCompare(b.title));
-}
-
-export async function getOfertaById(id: string): Promise<Oferta | null> {
-  const snap = await getDoc(doc(db, COLLECTIONS.OFERTAS, id));
-  if (!snap.exists()) return null;
-  return { id: snap.id, ...snap.data() } as Oferta;
-}

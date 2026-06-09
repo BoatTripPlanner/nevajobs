@@ -15,6 +15,12 @@
   "a11y": {
     "scrollToTop": "Torna su"
   },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "description": "La pagina che cerchi non esiste o l'offerta non è più disponibile.",
+    "backHome": "Torna alla home",
+    "browseJobs": "Vedi offerte"
+  },
   "hero": {
     "badge": "Professionisti seri · Settore privato della neve",
     "titleBefore": "Trova il tuo prossimo",

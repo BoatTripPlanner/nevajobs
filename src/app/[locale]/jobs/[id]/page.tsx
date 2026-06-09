@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/home/Navbar";
 import { JobDetailView } from "@/components/jobs/JobDetailView";
 import { SiteFooter } from "@/components/trust/SiteFooter";
-import { getOfertaById } from "@/lib/data/ofertas";
+import { getOfertaById } from "@/lib/data/ofertas-server";
 
 export const revalidate = 60;
 

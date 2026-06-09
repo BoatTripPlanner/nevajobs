@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/home/Navbar";
 import { HomeJobsSection } from "@/components/home/HomeJobsSection";
 import { SiteFooter } from "@/components/trust/SiteFooter";
-import { getActiveOfertas } from "@/lib/data/ofertas";
+import { getActiveOfertas } from "@/lib/data/ofertas-server";
 
 export const revalidate = 60;
 

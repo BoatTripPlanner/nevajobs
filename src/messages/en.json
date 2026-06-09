@@ -15,6 +15,12 @@
   "a11y": {
     "scrollToTop": "Back to top"
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or the job is no longer available.",
+    "backHome": "Back to home",
+    "browseJobs": "Browse jobs"
+  },
   "hero": {
     "badge": "Serious professionals · Private snow sector",
     "titleBefore": "Find your next",
