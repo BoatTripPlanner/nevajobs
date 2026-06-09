@@ -10,6 +10,7 @@ import {
   skiResortKeys,
   sportModalityKeys,
 } from "@/lib/data/filter-keys";
+import { scrollToIdWhenReady } from "@/lib/scroll/scroll";
 import type { JobSearchFilters } from "@/types/job";
 
 interface JobSearchProps {
@@ -94,10 +95,11 @@ export function JobSearch({ onSearch }: JobSearchProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onSearch?.(filters);
+    scrollToIdWhenReady("jobs");
   }
 
   return (
-    <section className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <section id="search" className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <form
           onSubmit={handleSubmit}

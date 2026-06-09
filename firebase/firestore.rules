@@ -70,7 +70,15 @@ service cloud.firestore {
              && (!('desbloqueos_mes_reset_mes' in request.resource.data)
                  || request.resource.data.desbloqueos_mes_reset_mes == resource.data.desbloqueos_mes_reset_mes)
              && (!('ofertas_destacadas_mes_usadas' in request.resource.data)
-                 || request.resource.data.ofertas_destacadas_mes_usadas == resource.data.ofertas_destacadas_mes_usadas);
+                 || request.resource.data.ofertas_destacadas_mes_usadas == resource.data.ofertas_destacadas_mes_usadas)
+             && (!('badge_verified_speed' in request.resource.data)
+                 || request.resource.data.badge_verified_speed == resource.data.badge_verified_speed)
+             && (!('tiene_ski_pass' in request.resource.data)
+                 || request.resource.data.tiene_ski_pass == resource.data.tiene_ski_pass)
+             && (!('perfil_desbloqueado_pago' in request.resource.data)
+                 || request.resource.data.perfil_desbloqueado_pago == resource.data.perfil_desbloqueado_pago)
+             && (!('ski_pass_temporada' in request.resource.data)
+                 || request.resource.data.ski_pass_temporada == resource.data.ski_pass_temporada);
     }
 
     function isValidUsuarioCreate() {
@@ -103,10 +111,8 @@ service cloud.firestore {
 
       // Lectura:
       //   • Propio perfil → completo
-      //   • Perfiles candidato → empresas autenticadas (feed / búsqueda)
-      //   • Los CVs reales siguen protegidos en Storage (/cvs/{uid}/...)
-      allow read: if isOwner(userId)
-                  || (isEmpresa() && resource.data.rol == 'candidato');
+      //   • Empresas: candidatos vía API /api/employers/candidates (sin email/teléfono/CV)
+      allow read: if isOwner(userId);
 
       allow create: if isOwner(userId) && isValidUsuarioCreate();
 

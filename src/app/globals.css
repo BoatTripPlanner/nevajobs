@@ -7,6 +7,22 @@
   --border: #e2e8f0;
   --muted: #64748b;
   --accent: #0891b2;
+  --scroll-offset: 4.5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--scroll-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+[id] {
+  scroll-margin-top: var(--scroll-offset);
 }
 
 @theme inline {

@@ -1,15 +1,16 @@
 import { computeMatch } from "@/lib/match/compute-match";
-import type { Oferta, Usuario } from "@/types";
+import type { CandidatoPublicView } from "@/lib/privacy/sanitize-candidato";
+import type { Oferta } from "@/types";
 
 export interface CombinedHiringSuggestion {
   ofertaA: Oferta;
   ofertaB: Oferta;
-  candidatoA: Usuario;
-  candidatoB: Usuario;
+  candidatoA: CandidatoPublicView;
+  candidatoB: CandidatoPublicView;
   score: number;
 }
 
-function areLinkedPair(a: Usuario, b: Usuario): boolean {
+function areLinkedPair(a: CandidatoPublicView, b: CandidatoPublicView): boolean {
   if (a.pareja_uid && a.pareja_uid === b.uid) return true;
   if (b.pareja_uid && b.pareja_uid === a.uid) return true;
   const roleA = (a.rol_buscado ?? "").toLowerCase();
@@ -24,7 +25,7 @@ function areLinkedPair(a: Usuario, b: Usuario): boolean {
 
 export function findCombinedHiringSuggestions(
   ofertas: Oferta[],
-  candidatos: Usuario[],
+  candidatos: CandidatoPublicView[],
   limit = 6,
 ): CombinedHiringSuggestion[] {
   const active = ofertas.filter((o) => o.activa);

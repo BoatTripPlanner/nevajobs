@@ -1,5 +1,5 @@
 /**
- * Creates Nevajobs B2B Stripe products & prices, writes IDs to .env.local
+ * Creates Nevajobs B2B Stripe products & prices (EUR + CHF), writes IDs to .env.local
  * Run: npm run setup:stripe-plans
  */
 
@@ -11,10 +11,12 @@ const PLANS = [
   {
     productKey: "starter",
     name: "Nevajobs Starter",
-    description: "Small shops & station bars — 10 unlocks/month, less than a dinner out",
+    description: "Small shops & station bars — 15 unlocks/month",
     prices: [
-      { envKey: "STRIPE_PRICE_STARTER_MONTHLY", amount: 3900, recurring: "month" },
-      { envKey: "STRIPE_PRICE_STARTER_SEASON", amount: 17500, recurring: null },
+      { envKey: "STRIPE_PRICE_STARTER_MONTHLY", amount: 3900, recurring: "month", currency: "eur" },
+      { envKey: "STRIPE_PRICE_STARTER_MONTHLY_CHF", amount: 3900, recurring: "month", currency: "chf" },
+      { envKey: "STRIPE_PRICE_STARTER_SEASON", amount: 17500, recurring: null, currency: "eur" },
+      { envKey: "STRIPE_PRICE_STARTER_SEASON_CHF", amount: 17500, recurring: null, currency: "chf" },
     ],
   },
   {
@@ -22,8 +24,10 @@ const PLANS = [
     name: "Nevajobs Pro",
     description: "Hotels & restaurants — unlimited unlocks + Emergency Radar",
     prices: [
-      { envKey: "STRIPE_PRICE_PRO_MONTHLY", amount: 7900, recurring: "month" },
-      { envKey: "STRIPE_PRICE_PRO_SEASON", amount: 35000, recurring: null },
+      { envKey: "STRIPE_PRICE_PRO_MONTHLY", amount: 7900, recurring: "month", currency: "eur" },
+      { envKey: "STRIPE_PRICE_PRO_MONTHLY_CHF", amount: 7900, recurring: "month", currency: "chf" },
+      { envKey: "STRIPE_PRICE_PRO_SEASON", amount: 35000, recurring: null, currency: "eur" },
+      { envKey: "STRIPE_PRICE_PRO_SEASON_CHF", amount: 35000, recurring: null, currency: "chf" },
     ],
   },
   {
@@ -31,15 +35,35 @@ const PLANS = [
     name: "Nevajobs Enterprise",
     description: "Hotel chains & luxury resorts — featured offers + priority support",
     prices: [
-      { envKey: "STRIPE_PRICE_ENTERPRISE_MONTHLY", amount: 14900, recurring: "month" },
+      { envKey: "STRIPE_PRICE_ENTERPRISE_MONTHLY", amount: 14900, recurring: "month", currency: "eur" },
+      { envKey: "STRIPE_PRICE_ENTERPRISE_MONTHLY_CHF", amount: 14900, recurring: "month", currency: "chf" },
     ],
   },
   {
     productKey: "credit",
     name: "Nevajobs Candidate Credit",
-    description: "1 credit = unlock 1 candidate (CV, voice intro, chat) — €5",
+    description: "1 credit = unlock 1 candidate (CV, voice intro, chat)",
     prices: [
-      { envKey: "STRIPE_PRICE_CREDIT", amount: 500, recurring: null },
+      { envKey: "STRIPE_PRICE_CREDIT", amount: 500, recurring: null, currency: "eur" },
+      { envKey: "STRIPE_PRICE_CREDIT_CHF", amount: 500, recurring: null, currency: "chf" },
+    ],
+  },
+  {
+    productKey: "ski_pass",
+    name: "Nevajobs Ski Pass Candidato",
+    description: "Top Candidate badge + 48h early access + CV translator",
+    prices: [
+      { envKey: "STRIPE_PRICE_SKI_PASS", amount: 499, recurring: null, currency: "eur" },
+      { envKey: "STRIPE_PRICE_SKI_PASS_CHF", amount: 495, recurring: null, currency: "chf" },
+    ],
+  },
+  {
+    productKey: "profile_unlock",
+    name: "Nevajobs Profile Unlock",
+    description: "Unlock voice intro, video & couples filter after 15-day sprint",
+    prices: [
+      { envKey: "STRIPE_PRICE_PROFILE_UNLOCK", amount: 299, recurring: null, currency: "eur" },
+      { envKey: "STRIPE_PRICE_PROFILE_UNLOCK_CHF", amount: 295, recurring: null, currency: "chf" },
     ],
   },
 ];
@@ -76,12 +100,13 @@ async function findProductByKey(stripe, productKey) {
   return products.data.find((p) => p.metadata?.nevajobs_plan === productKey) ?? null;
 }
 
-async function findPriceForProduct(stripe, productId, amount, recurring) {
+async function findPriceForProduct(stripe, productId, amount, recurring, currency) {
   const prices = await stripe.prices.list({ product: productId, limit: 100, active: true });
   return (
     prices.data.find(
       (p) =>
         p.unit_amount === amount
+        && p.currency === currency
         && (recurring
           ? p.recurring?.interval === recurring
           : !p.recurring),
@@ -101,7 +126,7 @@ async function main() {
   const stripe = new Stripe(secretKey);
   let content = readFileSync(envPath, "utf8");
 
-  console.log("→ Creating Nevajobs B2B products & prices\n");
+  console.log("→ Creating Nevajobs products & prices (EUR + CHF)\n");
 
   const account = await stripe.accounts.retrieve();
   console.log(`  Account: ${account.settings?.dashboard?.display_name ?? account.id}\n`);
@@ -121,29 +146,32 @@ async function main() {
     }
 
     for (const priceDef of plan.prices) {
+      const currency = priceDef.currency ?? "eur";
       let price = await findPriceForProduct(
         stripe,
         product.id,
         priceDef.amount,
         priceDef.recurring,
+        currency,
       );
 
       if (!price) {
         price = await stripe.prices.create({
           product: product.id,
-          currency: "eur",
+          currency,
           unit_amount: priceDef.amount,
           ...(priceDef.recurring
             ? { recurring: { interval: priceDef.recurring } }
             : {}),
-          metadata: { nevajobs_plan: plan.productKey },
+          metadata: { nevajobs_plan: plan.productKey, currency },
         });
+        const symbol = currency === "chf" ? "CHF" : "€";
         const label = priceDef.recurring
-          ? `€${priceDef.amount / 100}/${priceDef.recurring}`
-          : `€${priceDef.amount / 100} once`;
+          ? `${symbol} ${priceDef.amount / 100}/${priceDef.recurring}`
+          : `${symbol} ${priceDef.amount / 100} once`;
         console.log(`  ✓ Created price: ${label} → ${price.id}`);
       } else {
-        console.log(`  ✓ Price exists: ${price.id}`);
+        console.log(`  ✓ Price exists: ${price.id} (${currency})`);
       }
 
       content = upsertEnvVar(content, priceDef.envKey, price.id);

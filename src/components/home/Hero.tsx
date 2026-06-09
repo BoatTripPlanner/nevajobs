@@ -1,4 +1,6 @@
 import { useTranslations } from "next-intl";
+import { HeroActions } from "@/components/home/HeroActions";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 
 export function Hero() {
   const t = useTranslations("hero");
@@ -22,6 +24,12 @@ export function Hero() {
         <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:mt-6 sm:text-xl">
           {t("subtitle")}
         </p>
+        <HeroActions />
+        <TrustBadges
+          variant="strip"
+          badges={["stripe", "gdpr", "verified", "europe"]}
+          className="mx-auto mt-8 max-w-3xl"
+        />
       </div>
     </section>
   );

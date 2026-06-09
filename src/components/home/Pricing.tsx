@@ -1,7 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { Check, Coins, Minus, Sparkles, X } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CREDIT_PRICE_EUR, isLaunchPromoActive, PLAN_PRICES } from "@/lib/billing/plans";
+import { TrustBadges } from "@/components/trust/TrustBadges";
+import {
+  currencyFromZona,
+  formatMoney,
+  getPlanPrices,
+} from "@/lib/billing/currency";
+import { isLaunchPromoActive } from "@/lib/billing/plans";
+import type { ZonaEconomica } from "@/types";
 
 const COMPARISON_ROWS = [
   "searchPost",
@@ -28,8 +38,14 @@ const COMPARISON_VALUES: Record<
   verifiedFilter: { candidate: false, free: false, starter: false, pro: false, enterprise: true },
 };
 
-export async function Pricing() {
-  const t = await getTranslations("pricing");
+const ZONA_OPTIONS: ZonaEconomica[] = ["UE", "Suiza", "Andorra"];
+
+export function Pricing() {
+  const t = useTranslations("pricing");
+  const locale = useLocale();
+  const [zona, setZona] = useState<ZonaEconomica>("UE");
+  const currency = currencyFromZona(zona);
+  const prices = getPlanPrices(currency);
   const showPromo = isLaunchPromoActive();
 
   const plans = [
@@ -52,9 +68,11 @@ export async function Pricing() {
     {
       id: "starter" as const,
       name: t("starter.name"),
-      price: `€${PLAN_PRICES.starter.monthly}`,
+      price: formatMoney(prices.starter.monthly, currency, locale),
       period: t("perMonth"),
-      altPrice: t("starter.seasonPrice", { price: PLAN_PRICES.starter.season }),
+      altPrice: t("starter.seasonPrice", {
+        price: formatMoney(prices.starter.season, currency, locale),
+      }),
       description: t("starter.description"),
       features: [
         t("starter.features.post"),
@@ -71,9 +89,11 @@ export async function Pricing() {
     {
       id: "pro" as const,
       name: t("pro.name"),
-      price: `€${PLAN_PRICES.pro.monthly}`,
+      price: formatMoney(prices.pro.monthly, currency, locale),
       period: t("perMonth"),
-      altPrice: t("pro.seasonPrice", { price: PLAN_PRICES.pro.season }),
+      altPrice: t("pro.seasonPrice", {
+        price: formatMoney(prices.pro.season, currency, locale),
+      }),
       description: t("pro.description"),
       features: [
         t("pro.features.unlocks"),
@@ -91,7 +111,7 @@ export async function Pricing() {
     {
       id: "enterprise" as const,
       name: t("enterprise.name"),
-      price: `€${PLAN_PRICES.enterprise.monthly}`,
+      price: formatMoney(prices.enterprise.monthly, currency, locale),
       period: t("perMonth"),
       description: t("enterprise.description"),
       features: [
@@ -117,6 +137,25 @@ export async function Pricing() {
           <h2 className="text-xl font-bold text-slate-900 sm:text-3xl">{t("title")}</h2>
           <p className="mx-auto mt-2 max-w-2xl text-slate-600">{t("subtitle")}</p>
           <p className="mt-2 text-sm font-medium text-cyan-700">{t("seasonNote")}</p>
+          <div className="mx-auto mt-5 inline-flex flex-wrap justify-center gap-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
+            {ZONA_OPTIONS.map((z) => (
+              <button
+                key={z}
+                type="button"
+                onClick={() => setZona(z)}
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                  zona === z
+                    ? "bg-cyan-100 text-cyan-900"
+                    : "text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                {t(`zones.${z}`)}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-slate-500">
+            {t("currencyNote", { currency })}
+          </p>
         </div>
 
         {showPromo && (
@@ -142,7 +181,7 @@ export async function Pricing() {
             </div>
             <div className="text-left sm:text-right">
               <p className="text-3xl font-bold text-slate-900">
-                €{CREDIT_PRICE_EUR}
+                {formatMoney(prices.credit, currency, locale)}
                 <span className="text-base font-normal text-slate-500">
                   {t("credits.perCredit")}
                 </span>
@@ -227,6 +266,9 @@ export async function Pricing() {
           </table>
         </div>
 
+        <div className="mt-10">
+          <TrustBadges variant="payment" className="mx-auto max-w-3xl" />
+        </div>
         <p className="mt-6 text-center text-xs text-slate-500">{t("footnote")}</p>
       </div>
     </section>

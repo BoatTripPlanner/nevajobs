@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter, Link } from "@/i18n/navigation";
+import { ScrollLink } from "@/components/scroll/ScrollLink";
 import {
   ChevronDown,
   Crown,
@@ -45,7 +46,10 @@ export function Navbar() {
   }
 
   return (
-    <header className="safe-top sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+    <header
+      data-scroll-offset-root
+      className="safe-top sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl"
+    >
       <nav className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-8">
         <Link href="/" className="group flex min-w-0 shrink items-center gap-2">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-sky-600 text-base font-bold text-white shadow-md shadow-cyan-500/20 sm:h-9 sm:w-9 sm:text-lg">
@@ -58,6 +62,27 @@ export function Navbar() {
             <span className="text-slate-800">jobs</span>
           </span>
         </Link>
+
+        <div className="hidden items-center gap-1 lg:flex">
+          <ScrollLink
+            href="/#search"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-cyan-700"
+          >
+            {t("jobs")}
+          </ScrollLink>
+          <ScrollLink
+            href="/#candidates"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-cyan-700"
+          >
+            {t("candidates")}
+          </ScrollLink>
+          <ScrollLink
+            href="/#pricing"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-cyan-700"
+          >
+            {t("pricing")}
+          </ScrollLink>
+        </div>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-4">
           <div className="relative">

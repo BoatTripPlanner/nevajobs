@@ -100,6 +100,8 @@ export const skiResorts = [
   { value: "st-anton", label: "St. Anton" },
   { value: "cortina", label: "Cortina d'Ampezzo" },
   { value: "val-disere", label: "Val d'Isère" },
+  { value: "davos", label: "Davos" },
+  { value: "st-moritz", label: "St. Moritz" },
 ];
 
 export const privateCategories = [

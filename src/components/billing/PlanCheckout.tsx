@@ -1,21 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { ScrollLink } from "@/components/scroll/ScrollLink";
 import { Coins, Crown, Loader2, Sparkles } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 import {
-  CREDIT_PRICE_EUR,
-  isLaunchPromoActive,
-  PLAN_PRICES,
-  type BillingPeriod,
-  type PlanId,
-} from "@/lib/billing/plans";
+  formatMoney,
+  getPlanPrices,
+  getUserBillingCurrency,
+} from "@/lib/billing/currency";
+import { isLaunchPromoActive, type BillingPeriod, type PlanId } from "@/lib/billing/plans";
 
 export function PlanCheckout() {
   const t = useTranslations("billing");
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
@@ -89,6 +91,9 @@ export function PlanCheckout() {
     }
   }
 
+  const currency = getUserBillingCurrency(profile);
+  const prices = getPlanPrices(currency);
+
   if (loading || !user) {
     return (
       <div className="flex justify-center py-16">
@@ -101,22 +106,22 @@ export function PlanCheckout() {
     {
       id: "starter",
       label: t("plans.starter"),
-      price: `€${PLAN_PRICES.starter.monthly}${t("perMonthShort")}`,
+      price: `${formatMoney(prices.starter.monthly, currency, locale)}${t("perMonthShort")}`,
     },
     {
       id: "pro",
       label: t("plans.pro"),
-      price: `€${PLAN_PRICES.pro.monthly}${t("perMonthShort")}`,
+      price: `${formatMoney(prices.pro.monthly, currency, locale)}${t("perMonthShort")}`,
     },
     {
       id: "enterprise",
       label: t("plans.enterprise"),
-      price: `€${PLAN_PRICES.enterprise.monthly}${t("perMonthShort")}`,
+      price: `${formatMoney(prices.enterprise.monthly, currency, locale)}${t("perMonthShort")}`,
     },
     {
       id: "credits",
       label: t("plans.credits"),
-      price: `€${CREDIT_PRICE_EUR}${t("perCredit")}`,
+      price: `${formatMoney(prices.credit, currency, locale)}${t("perCredit")}`,
     },
   ];
 
@@ -132,6 +137,9 @@ export function PlanCheckout() {
 
       <h1 className="text-2xl font-bold text-slate-900">{t("choosePlan")}</h1>
       <p className="mt-2 text-sm text-slate-600">{t("choosePlanSubtitle")}</p>
+      <p className="mt-2 text-xs font-medium text-cyan-700">
+        {t("billingCurrency", { currency })}
+      </p>
 
       {showPromo && selectedPlan === "pro" && period === "monthly" && (
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -190,7 +198,7 @@ export function PlanCheckout() {
               className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
             />
             <p className="mt-3 text-2xl font-bold text-slate-900">
-              €{creditQty * CREDIT_PRICE_EUR}
+              {formatMoney(creditQty * prices.credit, currency, locale)}
               <span className="text-sm font-normal text-slate-500">
                 {" "}
                 ({creditQty} {t("creditsLabel")})
@@ -200,10 +208,13 @@ export function PlanCheckout() {
         ) : (
           <>
             <p className="text-3xl font-bold text-slate-900">
-              €
-              {period === "monthly"
-                ? PLAN_PRICES[selectedPlan].monthly
-                : PLAN_PRICES[selectedPlan].season}
+              {formatMoney(
+                period === "monthly"
+                  ? prices[selectedPlan].monthly
+                  : (prices[selectedPlan].season ?? 0),
+                currency,
+                locale,
+              )}
               <span className="text-base font-normal text-slate-500">
                 {period === "monthly" ? t("perMonth") : t("seasonTotal")}
               </span>
@@ -240,12 +251,14 @@ export function PlanCheckout() {
         </button>
       )}
 
+      <TrustBadges variant="payment" className="mt-6" />
+
       <p className="mt-4 text-center text-xs text-slate-500">{t("stripeNote")}</p>
 
       <p className="mt-4 text-center text-sm">
-        <Link href="/#pricing" className="text-cyan-600 hover:text-cyan-700">
+        <ScrollLink href="/#pricing" className="text-cyan-600 hover:text-cyan-700">
           {t("comparePlans")} →
-        </Link>
+        </ScrollLink>
       </p>
     </div>
   );

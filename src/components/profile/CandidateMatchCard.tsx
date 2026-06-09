@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
+  BadgeCheck,
   FileCheck,
   Loader2,
   Lock,
@@ -11,12 +12,18 @@ import {
   Shield,
   Unlock,
   Video,
+  Zap,
 } from "lucide-react";
 import { VoiceIntroPlayer } from "@/components/home/VoiceIntroPlayer";
 import { getReliabilityTier } from "@/lib/billing/plan-access";
+import { downloadCandidateCv } from "@/lib/data/candidatos-client";
 import { unlockCandidate } from "@/lib/data/desbloqueos-client";
 import type { MatchResult } from "@/lib/match/compute-match";
-import type { Oferta, Usuario } from "@/types";
+import type {
+  CandidatoPublicView,
+  CandidatoUnlockedView,
+} from "@/lib/privacy/sanitize-candidato";
+import type { Oferta } from "@/types";
 
 type UnlockMeta = {
   chat_hasta?: string;
@@ -34,21 +41,23 @@ export function CandidateMatchCard({
   onUnlockError,
 }: {
   oferta: Oferta;
-  candidato: Usuario;
+  candidato: CandidatoPublicView;
   match: MatchResult;
   isUnlocked: boolean;
   idToken: string;
-  onUnlocked: (candidatoId: string, data: Partial<Usuario>) => void;
+  onUnlocked: (candidatoId: string, data: CandidatoUnlockedView) => void;
   onUnlockError: (message: string) => void;
 }) {
   const t = useTranslations("dashboard");
+  const tSprint = useTranslations("sprint");
   const tMatch = useTranslations("match");
   const [unlocking, setUnlocking] = useState(false);
-  const [unlockedData, setUnlockedData] = useState<Partial<Usuario> | null>(null);
+  const [unlockedData, setUnlockedData] = useState<CandidatoUnlockedView | null>(null);
   const [meta, setMeta] = useState<UnlockMeta | null>(null);
   const [showRefund, setShowRefund] = useState(false);
   const [refundLoading, setRefundLoading] = useState(false);
   const [refundDone, setRefundDone] = useState(false);
+  const [cvLoading, setCvLoading] = useState(false);
 
   const reliability = getReliabilityTier(candidato.temporadas_completadas);
 
@@ -77,6 +86,23 @@ export function CandidateMatchCard({
       onUnlocked(candidato.uid, result.candidato);
     } finally {
       setUnlocking(false);
+    }
+  }
+
+  async function handleCvDownload() {
+    if (!idToken) return;
+    setCvLoading(true);
+    try {
+      const result = await downloadCandidateCv(idToken, candidato.uid);
+      if (!result) {
+        onUnlockError(t("cvUnavailable"));
+        return;
+      }
+      const url = URL.createObjectURL(result.blob);
+      window.open(url, "_blank", "noopener,noreferrer");
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } finally {
+      setCvLoading(false);
     }
   }
 
@@ -117,7 +143,21 @@ export function CandidateMatchCard({
     <li className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="font-semibold text-slate-900">{candidato.nombre}</p>
+          <p className="flex flex-wrap items-center gap-2 font-semibold text-slate-900">
+            {candidato.nombre}
+            {candidato.badge_verified_speed && (
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                <Zap className="h-3 w-3" />
+                {tSprint("badgeVerifiedSpeed")}
+              </span>
+            )}
+            {candidato.badge_top_candidate && (
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-cyan-100 px-2 py-0.5 text-[10px] font-bold text-cyan-800">
+                <BadgeCheck className="h-3 w-3" />
+                {tSprint("badgeTopCandidate")}
+              </span>
+            )}
+          </p>
           <p className="mt-1 text-sm text-slate-600">
             {candidato.rol_buscado} · {candidato.pais_origen}
           </p>
@@ -178,17 +218,28 @@ export function CandidateMatchCard({
               {unlockedData.email}
             </p>
           )}
-          {unlockedData?.url_cv && (
-            <p className="text-sm">
-              <a
-                href={unlockedData.url_cv}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-cyan-700 hover:underline"
-              >
-                {t("downloadCv")}
-              </a>
+          {"telefono" in (unlockedData ?? {}) && unlockedData?.telefono && (
+            <p className="text-sm text-slate-700">
+              <span className="font-medium">{t("contactPhone")}:</span>{" "}
+              {unlockedData.telefono}
             </p>
+          )}
+          {(unlockedData?.has_cv || candidato.has_cv) && (
+            <button
+              type="button"
+              onClick={handleCvDownload}
+              disabled={cvLoading}
+              className="text-sm font-medium text-cyan-700 hover:underline disabled:opacity-60"
+            >
+              {cvLoading
+                ? t("loadingCv")
+                : revealed
+                  ? t("downloadCv")
+                  : t("previewCv")}
+            </button>
+          )}
+          {!revealed && candidato.has_cv && (
+            <p className="text-xs text-slate-500">{t("cvPreviewHint")}</p>
           )}
           {unlockedData?.url_audio_intro && (
             <VoiceIntroPlayer
@@ -266,11 +317,22 @@ export function CandidateMatchCard({
           )}
         </div>
       ) : (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          {candidato.has_cv && (
+            <button
+              type="button"
+              onClick={handleCvDownload}
+              disabled={cvLoading || !idToken}
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 disabled:opacity-60"
+            >
+              {cvLoading ? t("loadingCv") : t("previewCv")}
+            </button>
+          )}
         <button
           type="button"
           onClick={handleUnlock}
           disabled={unlocking}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-sky-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-sky-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
         >
           {unlocking ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -279,6 +341,7 @@ export function CandidateMatchCard({
           )}
           {t("unlockCandidate")}
         </button>
+        </div>
       )}
 
       {!revealed && (

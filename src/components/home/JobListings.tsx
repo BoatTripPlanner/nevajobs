@@ -13,7 +13,7 @@ export function JobListings({ jobs }: JobListingsProps) {
   const t = useTranslations("jobs");
 
   return (
-    <section className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <section id="jobs" className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>

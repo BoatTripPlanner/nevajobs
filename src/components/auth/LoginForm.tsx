@@ -12,6 +12,7 @@ import {
 } from "@/lib/auth/auth-service";
 import { getPostLoginPath } from "@/lib/profile/profile-service";
 import { GoogleLogo } from "@/components/ui/GoogleLogo";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 
 export function LoginForm() {
   const t = useTranslations("auth");
@@ -114,6 +115,8 @@ export function LoginForm() {
           {t("registerFree")}
         </Link>
       </p>
+
+      <TrustBadges variant="compact" className="mt-6" />
 
       <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-center text-xs text-slate-500">
         {t("testAccounts")}

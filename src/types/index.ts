@@ -98,8 +98,12 @@ export interface Usuario {
   idiomas_hablados: CodigoIdioma[] | string[];
   pais_origen: string;
 
-  /** Storage path o download URL firmada — nunca enlace público. */
+  /** Storage path o download URL — acceso solo vía API (nunca enlace directo a empresas). */
   url_cv?: string;
+  /** Ruta en Storage, ej. cvs/{uid}/cv.pdf */
+  cv_storage_path?: string;
+  /** Teléfono — solo visible tras desbloqueo de pago. */
+  telefono?: string;
   /** Voice Intro (~30 s) para el pasaporte de idiomas. */
   url_audio_intro?: string;
   /** Video-presentación corta (~15 s) — candidatos Pro+. */
@@ -137,10 +141,11 @@ export interface Usuario {
   estaciones_operacion?: string[];
   /** Empresa: sitio web (opcional). */
   sitio_web?: string;
-  /** Enterprise: alertas Telegram (chat ID o @usuario). */
-  alerta_telegram?: string;
-  /** Enterprise: alertas WhatsApp (número E.164). */
-  alerta_whatsapp?: string;
+  /** Empresa/candidato: zona de facturación (UE/Andorra → EUR, Suiza → CHF). */
+  zona_facturacion?: ZonaEconomica;
+
+  /** Enterprise: email para alertas de candidatos Top (por defecto usa `email`). */
+  alerta_email?: string;
   /** Enterprise: logo para ofertas de marca. */
   url_logo_empresa?: string;
 
@@ -149,6 +154,24 @@ export interface Usuario {
 
   /** Candidato verificado por Nevajobs (titulación/visado contrastados). */
   verificado_nevajobs?: boolean;
+
+  /** Sprint 15 días: fecha límite para completar perfil premium gratis. */
+  sprint_deadline_at?: Timestamp;
+  /** Insignia "Verified Speed" — sprint completado a tiempo. */
+  badge_verified_speed?: boolean;
+  sprint_completado_at?: Timestamp;
+
+  /** Desbloqueo de pago único (2,99€) tras caducar el sprint. */
+  perfil_desbloqueado_pago?: boolean;
+  perfil_desbloqueado_at?: Timestamp;
+
+  /** Ski Pass candidato (4,99€/temporada): Top Candidate + early access + traductor CV. */
+  tiene_ski_pass?: boolean;
+  ski_pass_temporada?: string;
+  ski_pass_comprado_at?: Timestamp;
+
+  /** CV traducido por idioma (FR, EN, DE) — rutas Storage. */
+  cv_traducciones?: Partial<Record<CodigoIdioma, string>>;
 
   /** Metadatos recomendados */
   created_at?: Timestamp;
@@ -222,6 +245,8 @@ export interface Postulacion {
   /** Si la empresa ya desbloqueó el perfil premium del candidato. */
   perfil_desbloqueado?: boolean;
   fecha_desbloqueo?: Timestamp;
+  /** Postulación en ventana VIP Ski Pass (48 h tras publicar oferta con alojamiento). */
+  acceso_temprano?: boolean;
 }
 
 export type PostulacionInput = Omit<Postulacion, "id" | "fecha_postulacion"> & {

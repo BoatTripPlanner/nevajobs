@@ -25,6 +25,8 @@ export type EmpresaProfileInput = {
   categorias_contratacion: CategoriaOferta[];
   estaciones_operacion: string[];
   sitio_web?: string;
+  /** Enterprise: email para alertas de candidatos Top (vacío = email de cuenta). */
+  alerta_email?: string;
 };
 
 export function isProfileComplete(profile: Usuario | null): boolean {
@@ -85,7 +87,21 @@ export async function saveEmpresaProfile(
     categorias_contratacion: input.categorias_contratacion,
     estaciones_operacion: input.estaciones_operacion,
     sitio_web: input.sitio_web?.trim() ? input.sitio_web.trim() : deleteField(),
+    alerta_email: input.alerta_email?.trim()
+      ? input.alerta_email.trim().toLowerCase()
+      : deleteField(),
     perfil_completo: true,
+    updated_at: serverTimestamp(),
+  });
+}
+
+export async function saveEmpresaAlertEmail(
+  uid: string,
+  email: string,
+): Promise<void> {
+  const trimmed = email.trim().toLowerCase();
+  await updateDoc(doc(db, COLLECTIONS.USUARIOS, uid), {
+    alerta_email: trimmed ? trimmed : deleteField(),
     updated_at: serverTimestamp(),
   });
 }

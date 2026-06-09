@@ -1,5 +1,17 @@
 import type { CategoriaOferta, ModalidadDeportiva, Oferta, Usuario } from "@/types";
 
+/** Campos mínimos para calcular compatibilidad oferta–candidato. */
+export type CandidatoMatchInput = Pick<
+  Usuario,
+  | "idiomas_hablados"
+  | "permiso_trabajo_ue"
+  | "rol_buscado"
+  | "modalidad_principal"
+  | "estacion_actual"
+  | "en_estacion"
+  | "disponibilidad_inmediata"
+>;
+
 export type MatchReasonKey =
   | "languagesFull"
   | "languagesPartial"
@@ -68,7 +80,7 @@ function modalityCompatible(
   return required === candidate;
 }
 
-export function computeMatch(oferta: Oferta, candidato: Usuario): MatchResult {
+export function computeMatch(oferta: Oferta, candidato: CandidatoMatchInput): MatchResult {
   const reasons: MatchReasonKey[] = [];
   let score = 0;
 

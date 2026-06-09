@@ -14,7 +14,10 @@ export async function AvailableCandidates({
   const t = await getTranslations("candidates");
 
   return (
-    <section className="border-y border-emerald-100 bg-gradient-to-b from-emerald-50/80 to-sky-50/50 px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+    <section
+      id="candidates"
+      className="border-y border-emerald-100 bg-gradient-to-b from-emerald-50/80 to-sky-50/50 px-4 py-10 sm:px-6 sm:py-12 lg:px-8"
+    >
       <div className="mx-auto max-w-5xl">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>

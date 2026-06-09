@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { RegisterServiceWorker } from "@/components/pwa/RegisterServiceWorker";
+import { ScrollManager } from "@/components/scroll/ScrollManager";
+import { ScrollToTop } from "@/components/scroll/ScrollToTop";
 import { routing, type Locale } from "@/i18n/routing";
 import { geistMono, geistSans } from "../layout";
 
@@ -62,7 +64,9 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col overscroll-y-none">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
+            <ScrollManager />
             {children}
+            <ScrollToTop />
             <InstallPrompt />
           </AuthProvider>
         </NextIntlClientProvider>

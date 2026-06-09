@@ -79,6 +79,7 @@ export function ProfileSetupForm() {
         categorias_contratacion: categorias,
         estaciones_operacion: estaciones,
         sitio_web: String(form.get("sitio_web") ?? ""),
+        alerta_email: String(form.get("alerta_email") ?? ""),
       });
       await refreshProfile();
       router.push("/dashboard");
@@ -212,6 +213,14 @@ export function ProfileSetupForm() {
             defaultValue={profile.sitio_web ?? ""}
             placeholder="https://..."
           />
+          <Field
+            label={t("alertEmail")}
+            name="alerta_email"
+            type="email"
+            defaultValue={profile.alerta_email ?? profile.email}
+            placeholder={profile.email}
+          />
+          <p className="-mt-3 text-xs text-slate-500">{t("alertEmailHint")}</p>
 
           <SubmitButton loading={loading} label={t("saveAndContinue")} />
         </form>

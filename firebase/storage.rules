@@ -6,16 +6,12 @@ service firebase.storage {
     // -------------------------------------------------------------------------
     // CVs — acceso estrictamente privado
     // Ruta obligatoria: cvs/{userId}/{fileName}
-    //   • Lectura: solo el candidato dueño (userId) O empresa autenticada premium
+    //   • Lectura: solo el candidato dueño — empresas usan /api/employers/cv (PDF redactado o completo)
     //   • Escritura: solo el candidato dueño de la carpeta
     // Los PDFs NO deben ser públicos ni usar tokens de acceso permanentes.
     // -------------------------------------------------------------------------
     match /cvs/{userId}/{fileName} {
-      allow read: if request.auth != null
-                  && (
-                    request.auth.uid == userId
-                    || isEmpresaPremium()
-                  );
+      allow read: if request.auth != null && request.auth.uid == userId;
 
       allow create, update: if request.auth != null
                             && request.auth.uid == userId
@@ -34,8 +30,7 @@ service firebase.storage {
     }
 
     match /video-intros/{userId}/{fileName} {
-      allow read: if request.auth != null
-                  && (request.auth.uid == userId || isEmpresaPremium());
+      allow read: if request.auth != null && request.auth.uid == userId;
       allow create, update: if request.auth != null
                             && request.auth.uid == userId
                             && request.resource.size < 15 * 1024 * 1024;

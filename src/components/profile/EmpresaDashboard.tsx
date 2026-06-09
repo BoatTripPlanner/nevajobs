@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   AlertCircle,
+  Bell,
   Download,
   Loader2,
+  Mail,
   Plus,
   Radar,
   Sparkles,
@@ -22,7 +24,7 @@ import {
   canUseBrandedOffers,
   canUseCombinedHiring,
   canUseCouplesFilter,
-  canUseMobileAlerts,
+  canUseEmailAlerts,
   canUseVerifiedFilter,
   canUseVisaFilter,
   getReliabilityTier,
@@ -31,12 +33,15 @@ import {
 } from "@/lib/billing/plan-access";
 import { findCombinedHiringSuggestions } from "@/lib/match/combined-hiring";
 import { fetchUnlockedCandidateIds } from "@/lib/data/desbloqueos-client";
-import {
-  createOferta,
-  getAvailableCandidatos,
-  getEmpresaOfertas,
-} from "@/lib/data/ofertas-client";
+import { fetchCandidatosForEmpresa } from "@/lib/data/candidatos-client";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { createOferta, getEmpresaOfertas } from "@/lib/data/ofertas-client";
+import { saveEmpresaAlertEmail } from "@/lib/profile/profile-service";
+import { scrollToIdWhenReady } from "@/lib/scroll/scroll";
+import { COLLECTIONS } from "@/types";
 import { computeMatch } from "@/lib/match/compute-match";
+import type { CandidatoPublicView } from "@/lib/privacy/sanitize-candidato";
 import type { CategoriaOferta, Oferta, Usuario, ZonaEconomica } from "@/types";
 
 const CATEGORY_OPTIONS: CategoriaOferta[] = ["hoteles", "escuelas", "alquiler", "oficina"];
@@ -46,7 +51,7 @@ export function EmpresaDashboard() {
   const tProfile = useTranslations("profile");
   const { user, profile, refreshProfile } = useAuth();
   const [ofertas, setOfertas] = useState<Oferta[]>([]);
-  const [candidatos, setCandidatos] = useState<Usuario[]>([]);
+  const [candidatos, setCandidatos] = useState<CandidatoPublicView[]>([]);
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [showJobForm, setShowJobForm] = useState(false);
@@ -60,6 +65,19 @@ export function EmpresaDashboard() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiDraft, setAiDraft] = useState<{ titulo: string; descripcion: string } | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [alertEmailInput, setAlertEmailInput] = useState("");
+  const [savingAlertEmail, setSavingAlertEmail] = useState(false);
+  const [alertEmailSaved, setAlertEmailSaved] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      setAlertEmailInput(profile.alerta_email ?? profile.email ?? "");
+    }
+  }, [profile?.uid, profile?.alerta_email, profile?.email]);
+
+  useEffect(() => {
+    if (showJobForm) scrollToIdWhenReady("job-form");
+  }, [showJobForm]);
 
   useEffect(() => {
     if (!profile?.uid || !user) return;
@@ -72,7 +90,7 @@ export function EmpresaDashboard() {
         setIdToken(token);
         const [jobs, cands, unlocked] = await Promise.all([
           getEmpresaOfertas(empresaId),
-          getAvailableCandidatos(),
+          fetchCandidatosForEmpresa(token),
           fetchUnlockedCandidateIds(token),
         ]);
         setOfertas(jobs);
@@ -122,7 +140,7 @@ export function EmpresaDashboard() {
   const hasCombined = canUseCombinedHiring(profile);
   const hasAtsExport = canExportAts(profile);
   const hasBranded = canUseBrandedOffers(profile);
-  const hasMobileAlerts = canUseMobileAlerts(profile);
+  const hasEmailAlerts = canUseEmailAlerts(profile);
 
   const combinedSuggestions = hasCombined
     ? findCombinedHiringSuggestions(activeOfertas, filteredCandidatos)
@@ -152,7 +170,14 @@ export function EmpresaDashboard() {
       .map((s) => s.trim().toUpperCase())
       .filter(Boolean);
 
+    const zona = (form.get("zona") as ZonaEconomica) || "UE";
+
     try {
+      await updateDoc(doc(db, COLLECTIONS.USUARIOS, profile.uid), {
+        zona_facturacion: zona,
+      });
+      await refreshProfile();
+
       await createOferta({
         titulo: String(form.get("titulo") ?? ""),
         descripcion: String(form.get("descripcion") ?? "") || aiDraft?.descripcion,
@@ -165,7 +190,7 @@ export function EmpresaDashboard() {
         incluye_alojamiento: form.get("alojamiento") === "on",
         acepta_parejas: form.get("parejas") === "on",
         idiomas_requeridos: idiomas,
-        zona_economica: (form.get("zona") as ZonaEconomica) || "UE",
+        zona_economica: zona,
         destacada: hasBranded && form.get("destacada") === "on",
         marca_personalizada: hasBranded && form.get("marca") === "on",
         url_logo: hasBranded ? String(form.get("url_logo") ?? "") || undefined : undefined,
@@ -217,6 +242,22 @@ export function EmpresaDashboard() {
       setShowJobForm(true);
     } finally {
       setAiLoading(false);
+    }
+  }
+
+  async function handleSaveAlertEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!profile) return;
+    setSavingAlertEmail(true);
+    setAlertEmailSaved(false);
+    try {
+      await saveEmpresaAlertEmail(profile.uid, alertEmailInput);
+      await refreshProfile();
+      setAlertEmailSaved(true);
+    } catch {
+      setUnlockError(t("alertEmailSaveFailed"));
+    } finally {
+      setSavingAlertEmail(false);
     }
   }
 
@@ -281,6 +322,55 @@ export function EmpresaDashboard() {
             <dd className="mt-0.5 font-medium text-slate-800">{activeOfertas.length}</dd>
           </div>
         </dl>
+
+        <form
+          onSubmit={handleSaveAlertEmail}
+          className="mt-5 border-t border-slate-100 pt-5"
+        >
+          <div className="mb-3 flex items-center gap-2">
+            <Bell className="h-4 w-4 text-cyan-600" />
+            <h3 className="text-sm font-semibold text-slate-900">{t("alertEmailSettings")}</h3>
+            {hasEmailAlerts && (
+              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+                Enterprise
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-slate-600">
+            {hasEmailAlerts ? t("alertEmailSettingsDesc") : t("alertEmailEnterpriseOnly")}
+          </p>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <label className="flex-1">
+              <span className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-slate-500">
+                <Mail className="h-3.5 w-3.5" />
+                {tProfile("alertEmail")}
+              </span>
+              <input
+                type="email"
+                value={alertEmailInput}
+                onChange={(e) => setAlertEmailInput(e.target.value)}
+                placeholder={profile.email}
+                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={savingAlertEmail}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {savingAlertEmail && <Loader2 className="h-4 w-4 animate-spin" />}
+              {t("saveAlertEmail")}
+            </button>
+          </div>
+          {alertEmailSaved && (
+            <p className="mt-2 text-xs font-medium text-emerald-700">{t("alertEmailSaved")}</p>
+          )}
+          {hasEmailAlerts && (
+            <p className="mt-2 text-xs text-slate-500">
+              {t("emailAlertsActive", { email: alertEmailInput || profile.email })}
+            </p>
+          )}
+        </form>
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -332,9 +422,6 @@ export function EmpresaDashboard() {
             onChange={setVerifiedOnly}
           />
         </div>
-        {hasMobileAlerts && (
-          <p className="mt-3 text-xs text-slate-500">{t("mobileAlertsActive")}</p>
-        )}
       </section>
 
       {hasAiOffers && (
@@ -453,6 +540,7 @@ export function EmpresaDashboard() {
 
         {showJobForm && (
           <form
+            id="job-form"
             onSubmit={handlePostJob}
             className="mb-6 space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
           >
@@ -495,9 +583,9 @@ export function EmpresaDashboard() {
               label={t("economicZone")}
               name="zona"
               options={[
-                { value: "UE", label: "EU / EEA" },
-                { value: "Suiza", label: "Switzerland" },
-                { value: "Andorra", label: "Andorra" },
+                { value: "UE", label: t("zones.UE") },
+                { value: "Suiza", label: t("zones.Suiza") },
+                { value: "Andorra", label: t("zones.Andorra") },
               ]}
             />
             <label className="flex items-center gap-2 text-sm text-slate-700">

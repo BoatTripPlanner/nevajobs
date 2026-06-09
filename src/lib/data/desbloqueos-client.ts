@@ -1,4 +1,4 @@
-import type { Usuario } from "@/types";
+import type { CandidatoUnlockedView } from "@/lib/privacy/sanitize-candidato";
 
 export async function fetchUnlockedCandidateIds(
   idToken: string,
@@ -26,7 +26,7 @@ export async function unlockCandidate(
 ): Promise<
   | {
       ok: true;
-      candidato: Partial<Usuario>;
+      candidato: CandidatoUnlockedView;
       alreadyUnlocked: boolean;
       meta?: UnlockMeta;
     }
@@ -44,7 +44,7 @@ export async function unlockCandidate(
   const data = (await res.json()) as {
     error?: string;
     code?: string;
-    candidato?: Partial<Usuario>;
+    candidato?: CandidatoUnlockedView;
     alreadyUnlocked?: boolean;
     meta?: UnlockMeta;
   };
@@ -55,7 +55,7 @@ export async function unlockCandidate(
 
   return {
     ok: true,
-    candidato: data.candidato ?? {},
+    candidato: data.candidato ?? ({} as CandidatoUnlockedView),
     alreadyUnlocked: Boolean(data.alreadyUnlocked),
     meta: data.meta,
   };

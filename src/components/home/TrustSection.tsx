@@ -1,5 +1,6 @@
 import { Briefcase, Building2, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 
 export function TrustSection() {
   const t = useTranslations("trust");
@@ -37,6 +38,13 @@ export function TrustSection() {
               {t("companiesDesc")}
             </p>
           </article>
+        </div>
+
+        <div className="mt-8 border-t border-slate-100 pt-8">
+          <p className="mb-4 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">
+            {t("qualityTitle")}
+          </p>
+          <TrustBadges variant="grid" />
         </div>
       </div>
     </section>

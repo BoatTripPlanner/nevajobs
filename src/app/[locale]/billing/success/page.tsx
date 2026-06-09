@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { CheckCircle2 } from "lucide-react";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 
 export default async function BillingSuccessPage() {
   const t = await getTranslations("billing");
@@ -19,6 +20,7 @@ export default async function BillingSuccessPage() {
             {t("successTitle")}
           </h1>
           <p className="mt-2 text-sm text-slate-600">{t("successSubtitle")}</p>
+          <TrustBadges variant="compact" badges={["stripe", "guarantee", "transparent"]} className="mt-6" />
           <Link
             href="/"
             className="mt-8 inline-block rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:from-cyan-600 hover:to-sky-700"

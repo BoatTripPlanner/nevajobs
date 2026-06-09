@@ -12,6 +12,7 @@ import {
 import { isCreatorEmail } from "@/lib/admin/creator";
 import { getPostLoginPath } from "@/lib/profile/profile-service";
 import { GoogleLogo } from "@/components/ui/GoogleLogo";
+import { TrustBadges } from "@/components/trust/TrustBadges";
 import type { RolUsuario } from "@/types";
 
 export function RegisterForm({
@@ -144,6 +145,8 @@ export function RegisterForm({
           {t("createAccount")}
         </button>
       </form>
+
+      <TrustBadges variant="compact" className="mt-6" />
 
       <p className="mt-6 text-center text-sm text-slate-600">
         {t("hasAccount")}{" "}

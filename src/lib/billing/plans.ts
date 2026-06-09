@@ -3,6 +3,8 @@
  * Los price IDs de Stripe se configuran en variables de entorno.
  */
 
+import type { BillingCurrency } from "@/lib/billing/currency";
+import { getPlanPrices, PLAN_PRICES_BY_CURRENCY } from "@/lib/billing/currency";
 import type { PlanEmpresa } from "@/types";
 
 export type PlanId = "starter" | "pro" | "enterprise";
@@ -23,7 +25,7 @@ export const PLAN_LIMITS = {
     videoIntro: false,
     antiFugasFilter: false,
     atsExport: false,
-    mobileAlerts: false,
+    emailAlerts: false,
     brandedOffers: false,
   },
   starter: {
@@ -40,7 +42,7 @@ export const PLAN_LIMITS = {
     videoIntro: false,
     antiFugasFilter: false,
     atsExport: false,
-    mobileAlerts: false,
+    emailAlerts: false,
     brandedOffers: false,
   },
   pro: {
@@ -57,7 +59,7 @@ export const PLAN_LIMITS = {
     videoIntro: true,
     antiFugasFilter: true,
     atsExport: false,
-    mobileAlerts: false,
+    emailAlerts: false,
     brandedOffers: false,
   },
   enterprise: {
@@ -74,20 +76,21 @@ export const PLAN_LIMITS = {
     videoIntro: true,
     antiFugasFilter: true,
     atsExport: true,
-    mobileAlerts: true,
+    emailAlerts: true,
     brandedOffers: true,
   },
 } as const;
 
-export const CREDIT_PRICE_EUR = 5;
+/** @deprecated Use getPlanPrices(currency) */
+export const CREDIT_PRICE_EUR = PLAN_PRICES_BY_CURRENCY.EUR.credit;
 
-export const PLAN_PRICES = {
-  starter: { monthly: 39, season: 175 },
-  pro: { monthly: 79, season: 350 },
-  enterprise: { monthly: 149, season: null },
-} as const;
+/** @deprecated Use getPlanPrices(currency) */
+export const PLAN_PRICES = PLAN_PRICES_BY_CURRENCY.EUR;
 
-export const FEATURED_OFFER_PRICE_EUR = 29;
+/** @deprecated Use getPlanPrices(currency) */
+export const FEATURED_OFFER_PRICE_EUR = PLAN_PRICES_BY_CURRENCY.EUR.featuredOffer;
+
+export { getPlanPrices, PLAN_PRICES_BY_CURRENCY };
 
 /** Noviembre: primer mes Pro gratis (campaña de lanzamiento). */
 export function isLaunchPromoActive(): boolean {
@@ -100,23 +103,31 @@ export function isWinterSeason(): boolean {
   return month >= 10 || month <= 2; // Nov–Mar
 }
 
+function priceEnvSuffix(currency: BillingCurrency): string {
+  return currency === "CHF" ? "_CHF" : "";
+}
+
 export function getStripePriceId(
   plan: PlanId,
   period: BillingPeriod,
+  currency: BillingCurrency = "EUR",
 ): string | undefined {
+  const suffix = priceEnvSuffix(currency);
   const envMap: Record<string, string | undefined> = {
-    "starter-monthly": process.env.STRIPE_PRICE_STARTER_MONTHLY,
-    "starter-season": process.env.STRIPE_PRICE_STARTER_SEASON,
+    "starter-monthly": process.env[`STRIPE_PRICE_STARTER_MONTHLY${suffix}`],
+    "starter-season": process.env[`STRIPE_PRICE_STARTER_SEASON${suffix}`],
     "pro-monthly":
-      process.env.STRIPE_PRICE_PRO_MONTHLY ?? process.env.STRIPE_PREMIUM_PRICE_ID,
-    "pro-season": process.env.STRIPE_PRICE_PRO_SEASON,
-    "enterprise-monthly": process.env.STRIPE_PRICE_ENTERPRISE_MONTHLY,
+      process.env[`STRIPE_PRICE_PRO_MONTHLY${suffix}`]
+      ?? (currency === "EUR" ? process.env.STRIPE_PREMIUM_PRICE_ID : undefined),
+    "pro-season": process.env[`STRIPE_PRICE_PRO_SEASON${suffix}`],
+    "enterprise-monthly": process.env[`STRIPE_PRICE_ENTERPRISE_MONTHLY${suffix}`],
   };
   return envMap[`${plan}-${period}`];
 }
 
-export function getCreditPriceId(): string | undefined {
-  return process.env.STRIPE_PRICE_CREDIT;
+export function getCreditPriceId(currency: BillingCurrency = "EUR"): string | undefined {
+  const suffix = priceEnvSuffix(currency);
+  return process.env[`STRIPE_PRICE_CREDIT${suffix}`];
 }
 
 export function planToEsPremium(plan: PlanEmpresa): boolean {

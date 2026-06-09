@@ -6,15 +6,23 @@
     "goPremium": "Go Premium",
     "premium": "Premium",
     "plans": "Plans",
+    "jobs": "Jobs",
+    "candidates": "Candidates",
+    "pricing": "Pricing",
     "dashboard": "Dashboard",
     "admin": "Admin"
+  },
+  "a11y": {
+    "scrollToTop": "Back to top"
   },
   "hero": {
     "badge": "Serious professionals · Private snow sector",
     "titleBefore": "Find your next",
     "titleHighlight": "winter season job",
     "titleAfter": "in Europe",
-    "subtitle": "The professional platform connecting committed candidates with serious employers in the private snow sector — hotels, ski schools, rental shops and resort offices across the Alps & Pyrenees."
+    "subtitle": "The professional platform connecting committed candidates with serious employers in the private snow sector — hotels, ski schools, rental shops and resort offices across the Alps & Pyrenees.",
+    "ctaJobs": "Search jobs",
+    "ctaPlans": "View plans"
   },
   "trust": {
     "title": "Serious people looking for work. Serious companies hiring.",
@@ -22,7 +30,8 @@
     "candidatesTitle": "Professional candidates",
     "candidatesDesc": "Complete profiles, verifiable languages and honest availability. For people committed to a full season — not just browsing.",
     "companiesTitle": "Employers who hire seriously",
-    "companiesDesc": "Hotels, private ski schools, shops and offices posting real roles and looking for reliable workers for the full season."
+    "companiesDesc": "Hotels, private ski schools, shops and offices posting real roles and looking for reliable workers for the full season.",
+    "qualityTitle": "Quality and trust at every step"
   },
   "stats": {
     "live": "Live Stats",
@@ -63,7 +72,9 @@
       "sierra-nevada": "Sierra Nevada",
       "st-anton": "St. Anton",
       "cortina": "Cortina d'Ampezzo",
-      "val-disere": "Val d'Isère"
+      "val-disere": "Val d'Isère",
+      "davos": "Davos",
+      "st-moritz": "St. Moritz"
     },
     "categories": {
       "hotels": "Hotels & Hospitality",
@@ -124,6 +135,12 @@
     "title": "No-excuses pricing for employers",
     "subtitle": "No excuse not to hire: €5 per candidate, plans from €39/month. Candidates always free.",
     "seasonNote": "Winter season Nov–Mar · Summer free for employers · Cancel anytime",
+    "currencyNote": "Prices shown in {currency}",
+    "zones": {
+      "UE": "EU / EEA (€)",
+      "Suiza": "Switzerland (CHF)",
+      "Andorra": "Andorra (€)"
+    },
     "footnote": "€5 to save your weekend · Plans cheaper than dinner out · Secure Stripe payments",
     "mostPopular": "Best seller",
     "perMonth": "/ month",
@@ -186,7 +203,7 @@
         "allPro": "Everything in Pro, unlimited",
         "featured": "Branded offers (logo + facility photos)",
         "ats": "ATS export to your HR software",
-        "alerts": "Telegram/WhatsApp Top candidate alerts",
+        "alerts": "Top candidate email alerts",
         "verified": "Nevajobs-verified candidates filter",
         "support": "Priority WhatsApp support",
         "multiAccount": "Multi-account HR team access"
@@ -210,7 +227,49 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Nevajobs — Professional seasonal jobs in the private snow sector"
+    "copyright": "© {year} Nevajobs — Professional seasonal jobs in the private snow sector",
+    "trustLine": "Payments processed by Stripe · SSL encrypted connection · EU-hosted infrastructure · No hidden fees",
+    "navLabel": "Quick links",
+    "linkJobs": "Search jobs",
+    "linkCandidates": "Candidates",
+    "linkPricing": "Plans & pricing"
+  },
+  "trustBadges": {
+    "ariaLabel": "Quality and security guarantees",
+    "paymentTitle": "100% secure payment",
+    "paymentFootnote": "Nevajobs never stores card numbers. Billing is handled by Stripe (PCI DSS Level 1 certified).",
+    "stripe": {
+      "label": "Stripe payments",
+      "hint": "PCI DSS checkout · cards never stored on our servers"
+    },
+    "ssl": {
+      "label": "SSL encrypted",
+      "hint": "HTTPS across the platform · data protected in transit"
+    },
+    "gdpr": {
+      "label": "EU privacy",
+      "hint": "GDPR-aligned · contacts and CVs hidden until paid unlock"
+    },
+    "verified": {
+      "label": "Verified profiles",
+      "hint": "Verified Speed and Top Candidate badges for serious applicants"
+    },
+    "cvPrivacy": {
+      "label": "Protected CVs",
+      "hint": "Emails and phone numbers redacted in PDFs until employers pay"
+    },
+    "guarantee": {
+      "label": "7-day guarantee",
+      "hint": "Credit refund with official hiring/non-hiring documentation"
+    },
+    "transparent": {
+      "label": "Clear pricing",
+      "hint": "No hidden charges · cancel your plan anytime"
+    },
+    "europe": {
+      "label": "European snow",
+      "hint": "Alps & Pyrenees · professional private winter sector"
+    }
   },
   "pwa": {
     "title": "Install Nevajobs",
@@ -285,6 +344,8 @@
     "operatingResorts": "Resorts where you operate",
     "operatingResortsPlaceholder": "Zermatt, Chamonix, Val d'Isère",
     "website": "Website (optional)",
+    "alertEmail": "Alert email (optional)",
+    "alertEmailHint": "Enterprise plan: get notified when a Top candidate matches your area. Leave blank to use your account email.",
     "editProfile": "Edit profile"
   },
   "dashboard": {
@@ -315,6 +376,11 @@
     "resort": "Resort",
     "requiredLanguages": "Required languages (comma-separated)",
     "economicZone": "Economic zone",
+    "zones": {
+      "UE": "EU / EEA (EUR)",
+      "Suiza": "Switzerland (CHF)",
+      "Andorra": "Andorra (EUR)"
+    },
     "accommodationIncluded": "Accommodation included",
     "couplesWelcome": "Couples welcome",
     "forJob": "For job",
@@ -329,7 +395,12 @@
     "profileUnlocked": "Profile unlocked",
     "certification": "Certification",
     "contactEmail": "Email",
-    "downloadCv": "Download CV",
+    "downloadCv": "Download full CV",
+    "previewCv": "Preview CV (contact redacted)",
+    "cvPreviewHint": "Email and phone in the PDF are hidden until you unlock.",
+    "loadingCv": "Preparing CV…",
+    "cvUnavailable": "CV not available",
+    "contactPhone": "Phone",
     "openChat": "Open chat",
     "candidateFilters": "Candidate filters",
     "couplesFilter": "Couples only",
@@ -355,7 +426,13 @@
     "combinedHiringDesc": "Couples or friends matching two open roles at once.",
     "atsExport": "Export to ATS (CSV)",
     "atsExportFailed": "Export failed.",
-    "mobileAlertsActive": "Mobile alerts on: Telegram/WhatsApp when a Top candidate registers in your area.",
+    "emailAlertsActive": "Email alerts on: we'll notify {email} when a Top candidate appears in your area.",
+    "alertEmailSettings": "Top candidate alerts",
+    "alertEmailSettingsDesc": "You'll receive an email when a candidate with Ski Pass or Verified Speed badge matches your area.",
+    "alertEmailEnterpriseOnly": "Set the destination email here. Alerts are only sent on the Enterprise plan.",
+    "saveAlertEmail": "Save alert email",
+    "alertEmailSaved": "Alert email saved.",
+    "alertEmailSaveFailed": "Could not save alert email.",
     "jobDescription": "Job description",
     "brandedOffer": "Branded design (large logo)",
     "featuredOffer": "Featured listing",
@@ -397,6 +474,7 @@
   "billing": {
     "choosePlan": "Choose your plan",
     "choosePlanSubtitle": "Seasonal subscriptions Nov–Mar, pay-per-use credits, or start free.",
+    "billingCurrency": "Billing in {currency} based on your country/zone",
     "plans": {
       "starter": "Starter",
       "pro": "Pro",
@@ -498,5 +576,40 @@
     "fr": "Français",
     "de": "Deutsch",
     "it": "Italiano"
+  },
+  "sprint": {
+    "title": "15-Day Sprint",
+    "countdown": "⏰ {days} days left to upgrade your profile to PREMIUM for FREE",
+    "daysLeft": "{days} days",
+    "subtitle": "Complete experience, CV, Voice Intro and 15s video in time to earn the Verified Speed badge forever.",
+    "progress": "Sprint progress",
+    "freeIfFast": "Finish on time and everything stays unlocked free for life.",
+    "expiredTitle": "Sprint has ended",
+    "expiredDesc": "Advanced features (video, audio and couples filter) are locked until you unlock your profile.",
+    "lockedTitle": "Profile locked",
+    "lockedDesc": "Unlock with a one-time micro-payment or get the Ski Pass to stand out across Europe.",
+    "unlockProfile": "Unlock profile — €{price}",
+    "buySkiPass": "Candidate Ski Pass — €{price}",
+    "verifiedSpeedTitle": "Verified Speed — You made it!",
+    "verifiedSpeedDesc": "You completed the sprint on time. Your premium profile stays visible free forever.",
+    "skiPassActiveTitle": "Ski Pass active",
+    "skiPassActiveDesc": "Top Candidate badge, 48h early access on jobs with accommodation, and CV translator included.",
+    "badgeVerifiedSpeed": "Verified Speed",
+    "badgeTopCandidate": "Top Candidate",
+    "advancedLocked": "Video, audio and couples filter locked — complete the sprint or pay to unlock.",
+    "cvTranslator": "CV auto-translator",
+    "cvTranslatorDesc": "Translate your résumé to French, English or German in one click (Ski Pass).",
+    "earlyAccessActive": "VIP access: apply 48h before free users",
+    "earlyAccessLocked": "VIP access — Ski Pass",
+    "earlyAccessCountdown": "Applications open on {date}",
+    "earlyAccessWait": "This job with accommodation opens on {date}. Get Ski Pass for 48h early access.",
+    "skiPassSkip": "with Ski Pass you can apply now",
+    "steps": {
+      "basic": "Basic profile",
+      "experience": "Experience / certification",
+      "cv": "CV PDF",
+      "voice": "Voice Intro",
+      "video": "15s video"
+    }
   }
 }

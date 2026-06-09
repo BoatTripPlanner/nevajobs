@@ -7,7 +7,9 @@ import {
   updateProfile,
   type User,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
+import { SPRINT_DAYS } from "@/lib/billing/candidate-plans";
+import { resolveZonaFromCountry } from "@/lib/billing/currency";
 import { auth, db } from "@/lib/firebase";
 import { COLLECTIONS, type RolUsuario, type Usuario } from "@/types";
 
@@ -23,6 +25,11 @@ function buildUsuarioDoc(
   uid: string,
   input: Pick<RegisterInput, "nombre" | "email" | "rol" | "pais_origen">,
 ): Omit<Usuario, "created_at" | "updated_at"> {
+  const sprintDeadline = Timestamp.fromDate(
+    new Date(Date.now() + SPRINT_DAYS * 24 * 60 * 60 * 1000),
+  );
+  const zonaFacturacion = resolveZonaFromCountry(input.pais_origen);
+
   return {
     uid,
     nombre: input.nombre.trim(),
@@ -37,6 +44,10 @@ function buildUsuarioDoc(
     valoracion_media: 0,
     perfil_completo: false,
     plan_empresa: "gratis",
+    ...(input.rol === "candidato"
+      ? { sprint_deadline_at: sprintDeadline }
+      : {}),
+    ...(zonaFacturacion ? { zona_facturacion: zonaFacturacion } : {}),
   };
 }
 

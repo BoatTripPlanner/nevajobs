@@ -54,7 +54,9 @@ const keysFromLocal = Object.keys(localEnv).filter(
     key.startsWith("NEXT_PUBLIC_") ||
     key.startsWith("STRIPE_") ||
     key === "NEVAJOBS_CREATOR_EMAIL" ||
-    key === "CRON_SECRET",
+    key === "CRON_SECRET" ||
+    key === "RESEND_API_KEY" ||
+    key === "ALERT_FROM_EMAIL",
 );
 
 for (const key of keysFromLocal) {

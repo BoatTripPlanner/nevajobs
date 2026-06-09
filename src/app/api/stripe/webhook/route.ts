@@ -3,6 +3,8 @@ import type { PlanEmpresa } from "@/types";
 import { getStripe } from "@/lib/stripe";
 import {
   addCredits,
+  setProfileUnlock,
+  setSkiPass,
   setUserPlan,
   syncStripeCustomer,
 } from "@/lib/stripe-premium";
@@ -58,6 +60,10 @@ export async function POST(request: Request) {
         if (checkoutType === "credits") {
           const qty = Number(session.metadata?.credit_quantity ?? 1);
           await addCredits(uid, Number.isFinite(qty) && qty > 0 ? qty : 1);
+        } else if (checkoutType === "ski_pass") {
+          await setSkiPass(uid);
+        } else if (checkoutType === "profile_unlock") {
+          await setProfileUnlock(uid);
         } else {
           const plan = parsePlan(session.metadata?.plan);
           await setUserPlan(uid, plan, { resetMonthlyUsage: true });

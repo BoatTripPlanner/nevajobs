@@ -6,14 +6,23 @@
     "goPremium": "Premium werden",
     "premium": "Premium",
     "dashboard": "Dashboard",
-    "plans": "Pläne"
+    "plans": "Pläne",
+    "jobs": "Jobs",
+    "candidates": "Kandidaten",
+    "pricing": "Preise",
+    "admin": "Admin"
+  },
+  "a11y": {
+    "scrollToTop": "Nach oben"
   },
   "hero": {
     "badge": "Seriöse Fachkräfte · Privater Schneesektor",
     "titleBefore": "Finde deinen nächsten",
     "titleHighlight": "Saisonjob",
     "titleAfter": "in Europa",
-    "subtitle": "Die professionelle Plattform, die engagierte Kandidaten mit seriösen Arbeitgebern im privaten Schneesektor verbindet — Hotels, Skischulen, Verleihshops und Büros in den Alpen und Pyrenäen."
+    "subtitle": "Die professionelle Plattform, die engagierte Kandidaten mit seriösen Arbeitgebern im privaten Schneesektor verbindet — Hotels, Skischulen, Verleihshops und Büros in den Alpen und Pyrenäen.",
+    "ctaJobs": "Jobs suchen",
+    "ctaPlans": "Pläne ansehen"
   },
   "trust": {
     "title": "Seriöse Menschen suchen Arbeit. Seriöse Unternehmen stellen ein.",
@@ -21,7 +30,8 @@
     "candidatesTitle": "Professionelle Kandidaten",
     "candidatesDesc": "Vollständige Profile, überprüfbare Sprachen und ehrliche Verfügbarkeit. Für alle, die eine ganze Saison mit Engagement arbeiten wollen.",
     "companiesTitle": "Arbeitgeber, die ernsthaft einstellen",
-    "companiesDesc": "Hotels, private Skischulen, Shops und Büros mit echten Stellenangeboten und dem Bedarf an zuverlässigen Mitarbeitern für die gesamte Saison."
+    "companiesDesc": "Hotels, private Skischulen, Shops und Büros mit echten Stellenangeboten und dem Bedarf an zuverlässigen Mitarbeitern für die gesamte Saison.",
+    "qualityTitle": "Qualität und Vertrauen in jedem Schritt"
   },
   "stats": {
     "live": "Live-Statistiken",
@@ -123,6 +133,12 @@
     "title": "No-excuses pricing for employers",
     "subtitle": "No excuse not to hire: €5 per candidate, plans from €39/month. Candidates always free.",
     "seasonNote": "Winter season Nov–Mar · Summer free for employers · Cancel anytime",
+    "currencyNote": "Prices shown in {currency}",
+    "zones": {
+      "UE": "EU / EEA (€)",
+      "Suiza": "Switzerland (CHF)",
+      "Andorra": "Andorra (€)"
+    },
     "footnote": "€5 to save your weekend · Plans cheaper than dinner out · Secure Stripe payments",
     "mostPopular": "Best seller",
     "perMonth": "/ month",
@@ -181,6 +197,7 @@
       "features": {
         "allPro": "Everything in Pro, unlimited",
         "featured": "3 featured job offers/month",
+        "alerts": "E-Mail-Alerts für Top-Kandidaten",
         "verified": "Nevajobs-verified candidates filter",
         "support": "Priority WhatsApp support",
         "multiAccount": "Multi-account HR team access"
@@ -204,7 +221,25 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Nevajobs — Professionelle Saisonjobs im privaten Schneesektor"
+    "copyright": "© {year} Nevajobs — Professionelle Saisonjobs im privaten Schneesektor",
+    "trustLine": "Zahlungen über Stripe · SSL-verschlüsselt · EU-Infrastruktur · Keine versteckten Gebühren",
+    "navLabel": "Schnelllinks",
+    "linkJobs": "Jobs suchen",
+    "linkCandidates": "Kandidaten",
+    "linkPricing": "Pläne & Preise"
+  },
+  "trustBadges": {
+    "ariaLabel": "Qualitäts- und Sicherheitsgarantien",
+    "paymentTitle": "100 % sichere Zahlung",
+    "paymentFootnote": "Nevajobs speichert keine Kartennummern. Stripe verarbeitet Zahlungen (PCI DSS Level 1).",
+    "stripe": { "label": "Stripe-Zahlungen", "hint": "PCI-DSS-Checkout · Karten nie bei uns gespeichert" },
+    "ssl": { "label": "SSL-verschlüsselt", "hint": "HTTPS auf der gesamten Plattform" },
+    "gdpr": { "label": "EU-Datenschutz", "hint": "DSGVO · Kontakte und CVs bis Freischaltung verborgen" },
+    "verified": { "label": "Verifizierte Profile", "hint": "Verified Speed und Top Candidate Badges" },
+    "cvPrivacy": { "label": "Geschützte CVs", "hint": "E-Mail und Telefon im PDF geschwärzt" },
+    "guarantee": { "label": "7-Tage-Garantie", "hint": "Credit-Rückerstattung mit offiziellen Dokumenten" },
+    "transparent": { "label": "Klare Preise", "hint": "Keine versteckten Kosten · jederzeit kündbar" },
+    "europe": { "label": "Europäischer Schnee", "hint": "Alpen & Pyrenäen · professioneller Privatsektor" }
   },
   "pwa": {
     "title": "Nevajobs installieren",
@@ -279,6 +314,8 @@
     "operatingResorts": "Resorts mit Tätigkeit",
     "operatingResortsPlaceholder": "Zermatt, Chamonix, Val d'Isère",
     "website": "Website (optional)",
+    "alertEmail": "Alert-E-Mail (optional)",
+    "alertEmailHint": "Enterprise-Plan: Benachrichtigung bei Top-Kandidaten in Ihrer Region. Leer lassen = Konto-E-Mail.",
     "editProfile": "Profil bearbeiten"
   },
   "dashboard": {
@@ -333,7 +370,14 @@
     "emergencyRadar": "Emergency Radar",
     "emergencyRadarDesc": "Candidates with immediate availability physically in resort.",
     "emergencyRadarLocked": "Available on Pro and Enterprise. Find replacements in hours, not days.",
-    "noEmergencyCandidates": "No in-resort candidates with immediate availability right now."
+    "noEmergencyCandidates": "No in-resort candidates with immediate availability right now.",
+    "emailAlertsActive": "E-Mail-Alerts aktiv: Benachrichtigung an {email}, wenn ein Top-Kandidat in Ihrer Region erscheint.",
+    "alertEmailSettings": "Top-Kandidaten-Alerts",
+    "alertEmailSettingsDesc": "E-Mail bei Kandidaten mit Ski Pass oder Verified-Speed-Badge in Ihrer Region.",
+    "alertEmailEnterpriseOnly": "Ziel-E-Mail hier eintragen. Alerts nur mit Enterprise-Plan.",
+    "saveAlertEmail": "Alert-E-Mail speichern",
+    "alertEmailSaved": "Alert-E-Mail gespeichert.",
+    "alertEmailSaveFailed": "Alert-E-Mail konnte nicht gespeichert werden."
   },
   "match": {
     "score": "{score}% Match",

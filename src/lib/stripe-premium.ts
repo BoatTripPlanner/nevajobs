@@ -1,6 +1,8 @@
 import "server-only";
 import { FieldValue } from "firebase-admin/firestore";
+import { getCurrentWinterSeason } from "@/lib/billing/candidate-plans";
 import { planToEsPremium } from "@/lib/billing/plans";
+import { notifyTopCandidateIfEligible } from "@/lib/email/top-candidate-alerts";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { COLLECTIONS, type PlanEmpresa } from "@/types";
 
@@ -47,6 +49,55 @@ export async function addCredits(uid: string, amount: number): Promise<void> {
       },
       { merge: true },
     );
+}
+
+export async function setProfileUnlock(uid: string): Promise<void> {
+  await getAdminDb()
+    .collection(COLLECTIONS.USUARIOS)
+    .doc(uid)
+    .set(
+      {
+        perfil_desbloqueado_pago: true,
+        perfil_desbloqueado_at: FieldValue.serverTimestamp(),
+        updated_at: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
+}
+
+export async function setSkiPass(uid: string): Promise<void> {
+  await getAdminDb()
+    .collection(COLLECTIONS.USUARIOS)
+    .doc(uid)
+    .set(
+      {
+        tiene_ski_pass: true,
+        ski_pass_temporada: getCurrentWinterSeason(),
+        ski_pass_comprado_at: FieldValue.serverTimestamp(),
+        perfil_desbloqueado_pago: true,
+        perfil_desbloqueado_at: FieldValue.serverTimestamp(),
+        updated_at: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+  void notifyTopCandidateIfEligible(uid);
+}
+
+export async function awardVerifiedSpeedBadge(uid: string): Promise<void> {
+  await getAdminDb()
+    .collection(COLLECTIONS.USUARIOS)
+    .doc(uid)
+    .set(
+      {
+        badge_verified_speed: true,
+        sprint_completado_at: FieldValue.serverTimestamp(),
+        updated_at: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+  void notifyTopCandidateIfEligible(uid);
 }
 
 export async function syncStripeCustomer(

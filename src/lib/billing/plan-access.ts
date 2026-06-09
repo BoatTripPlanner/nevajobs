@@ -1,4 +1,5 @@
 import { PLAN_LIMITS } from "@/lib/billing/plans";
+import type { CandidatoPublicView } from "@/lib/privacy/sanitize-candidato";
 import type { PlanEmpresa, Usuario } from "@/types";
 
 export type UnlockBlockReason =
@@ -84,12 +85,12 @@ export function evaluateUnlock(profile: Usuario): {
   return { allowed: false, usesCredit: false, reason: "monthly_limit_reached" };
 }
 
-export function isCoupleCandidate(candidato: Usuario): boolean {
+export function isCoupleCandidate(candidato: CandidatoPublicView): boolean {
   const role = (candidato.rol_buscado ?? "").toLowerCase();
   return role.includes("couple") || role.includes("pareja");
 }
 
-export function isEmergencyCandidate(candidato: Usuario): boolean {
+export function isEmergencyCandidate(candidato: CandidatoPublicView): boolean {
   return candidato.disponibilidad_inmediata && Boolean(candidato.en_estacion);
 }
 
@@ -117,8 +118,8 @@ export function canUseBrandedOffers(profile: Usuario | null): boolean {
   return PLAN_LIMITS[getEffectivePlan(profile)].brandedOffers;
 }
 
-export function canUseMobileAlerts(profile: Usuario | null): boolean {
-  return PLAN_LIMITS[getEffectivePlan(profile)].mobileAlerts;
+export function canUseEmailAlerts(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].emailAlerts;
 }
 
 export function getReliabilityTier(
