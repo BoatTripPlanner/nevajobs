@@ -1,6 +1,11 @@
 import "server-only";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import {
+  CHAT_DAYS_AFTER_UNLOCK,
+  CREDIT_REPLACEMENT_DAYS,
+  addDays,
+} from "@/lib/billing/product-guarantees";
+import {
   currentMonthKey,
   evaluateUnlock,
   getMonthlyUnlocksUsed,
@@ -8,8 +13,20 @@ import {
 import { getAdminDb } from "@/lib/firebase-admin";
 import { COLLECTIONS, type Usuario } from "@/types";
 
+export type UnlockMeta = {
+  chat_hasta: string;
+  garantia_hasta?: string;
+  uso_credito: boolean;
+};
+
 export type UnlockResult =
-  | { ok: true; candidato: Usuario; alreadyUnlocked: boolean; usedCredit: boolean }
+  | {
+      ok: true;
+      candidato: Usuario;
+      alreadyUnlocked: boolean;
+      usedCredit: boolean;
+      meta: UnlockMeta;
+    }
   | { ok: false; error: string; code: string };
 
 export async function getUnlockedCandidateIds(empresaId: string): Promise<string[]> {
@@ -56,11 +73,17 @@ export async function unlockCandidateForEmpresa(
   }
 
   if (existingSnap.exists) {
+    const existing = existingSnap.data()!;
     return {
       ok: true,
       candidato,
       alreadyUnlocked: true,
-      usedCredit: Boolean(existingSnap.data()?.uso_credito),
+      usedCredit: Boolean(existing.uso_credito),
+      meta: {
+        uso_credito: Boolean(existing.uso_credito),
+        chat_hasta: existing.chat_hasta?.toDate?.()?.toISOString() ?? "",
+        garantia_hasta: existing.garantia_hasta?.toDate?.()?.toISOString(),
+      },
     };
   }
 
@@ -100,6 +123,12 @@ export async function unlockCandidateForEmpresa(
     });
   }
 
+  const now = new Date();
+  const chatHasta = addDays(now, CHAT_DAYS_AFTER_UNLOCK);
+  const garantiaHasta = evaluation.usesCredit
+    ? addDays(now, CREDIT_REPLACEMENT_DAYS)
+    : undefined;
+
   const desbloqueoRef = db.collection(COLLECTIONS.DESBLOQUEOS).doc(desbloqueoDocId);
   batch.set(desbloqueoRef, {
     empresa_id: empresaId,
@@ -107,6 +136,10 @@ export async function unlockCandidateForEmpresa(
     ...(ofertaId ? { oferta_id: ofertaId } : {}),
     uso_credito: evaluation.usesCredit,
     fecha_desbloqueo: Timestamp.now(),
+    chat_hasta: Timestamp.fromDate(chatHasta),
+    ...(garantiaHasta
+      ? { garantia_hasta: Timestamp.fromDate(garantiaHasta) }
+      : {}),
   });
 
   await batch.commit();
@@ -116,5 +149,10 @@ export async function unlockCandidateForEmpresa(
     candidato,
     alreadyUnlocked: false,
     usedCredit: evaluation.usesCredit,
+    meta: {
+      uso_credito: evaluation.usesCredit,
+      chat_hasta: chatHasta.toISOString(),
+      garantia_hasta: garantiaHasta?.toISOString(),
+    },
   };
 }

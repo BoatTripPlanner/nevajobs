@@ -32,7 +32,11 @@ export const COLLECTIONS = {
 export const STORAGE_PATHS = {
   CVS: "cvs",
   AUDIO_INTROS: "audio-intros",
+  VIDEO_INTROS: "video-intros",
+  REFUND_DOCS: "refund-docs",
 } as const;
+
+export type DevolucionEstado = "pendiente" | "aprobada" | "rechazada";
 
 // ---------------------------------------------------------------------------
 // Tipos compartidos
@@ -98,6 +102,13 @@ export interface Usuario {
   url_cv?: string;
   /** Voice Intro (~30 s) para el pasaporte de idiomas. */
   url_audio_intro?: string;
+  /** Video-presentación corta (~15 s) — candidatos Pro+. */
+  url_video_intro?: string;
+
+  /** Temporadas de nieve completadas con éxito (tag anti-fugas). */
+  temporadas_completadas?: number;
+  /** UID del compañero/a para contratación combinada (parejas). */
+  pareja_uid?: string;
 
   /** Emergency switch: disponible para incorporación inmediata / in resort. */
   disponibilidad_inmediata: boolean;
@@ -126,6 +137,12 @@ export interface Usuario {
   estaciones_operacion?: string[];
   /** Empresa: sitio web (opcional). */
   sitio_web?: string;
+  /** Enterprise: alertas Telegram (chat ID o @usuario). */
+  alerta_telegram?: string;
+  /** Enterprise: alertas WhatsApp (número E.164). */
+  alerta_whatsapp?: string;
+  /** Enterprise: logo para ofertas de marca. */
+  url_logo_empresa?: string;
 
   /** true cuando el usuario completó el onboarding de perfil. */
   perfil_completo?: boolean;
@@ -166,6 +183,14 @@ export interface Oferta {
 
   activa: boolean;
   fecha_publicacion: Timestamp;
+
+  /** Descripción completa (puede generarse con IA). */
+  descripcion?: string;
+  /** Enterprise: oferta destacada con diseño de marca. */
+  destacada?: boolean;
+  marca_personalizada?: boolean;
+  url_logo?: string;
+  url_foto_instalacion?: string;
 
   created_at?: Timestamp;
   updated_at?: Timestamp;
@@ -217,6 +242,16 @@ export interface Desbloqueo {
   fecha_desbloqueo: Timestamp;
   /** Si consumió 1 crédito pay-per-use en lugar de cupo del plan. */
   uso_credito?: boolean;
+  /** Chat directo activo hasta esta fecha (30 días tras desbloqueo). */
+  chat_hasta?: Timestamp;
+  /** Ventana de garantía de sustitución (7 días si uso_credito). */
+  garantia_hasta?: Timestamp;
+  devolucion_estado?: DevolucionEstado;
+  /** Documento oficial de alta en empresa (para devolución). */
+  doc_alta_url?: string;
+  /** Documento oficial de baja / no incorporación (para devolución). */
+  doc_baja_url?: string;
+  devolucion_motivo?: string;
 }
 
 export type DesbloqueoInput = Omit<Desbloqueo, "id" | "fecha_desbloqueo"> & {

@@ -35,6 +35,7 @@ export async function POST(request: Request) {
   return Response.json({
     alreadyUnlocked: result.alreadyUnlocked,
     usedCredit: result.usedCredit,
+    meta: result.meta,
     candidato: {
       uid: candidato.uid,
       nombre: candidato.nombre,
@@ -46,6 +47,8 @@ export async function POST(request: Request) {
       estacion_actual: candidato.estacion_actual,
       url_cv: candidato.url_cv,
       url_audio_intro: candidato.url_audio_intro,
+      url_video_intro: candidato.url_video_intro,
+      temporadas_completadas: candidato.temporadas_completadas,
       disponibilidad_inmediata: candidato.disponibilidad_inmediata,
       permiso_trabajo_ue: candidato.permiso_trabajo_ue,
       valoracion_media: candidato.valoracion_media,

@@ -13,12 +13,23 @@ export async function fetchUnlockedCandidateIds(
   return data.candidato_ids ?? [];
 }
 
+export type UnlockMeta = {
+  chat_hasta?: string;
+  garantia_hasta?: string;
+  uso_credito?: boolean;
+};
+
 export async function unlockCandidate(
   idToken: string,
   candidatoId: string,
   ofertaId?: string,
 ): Promise<
-  | { ok: true; candidato: Partial<Usuario>; alreadyUnlocked: boolean }
+  | {
+      ok: true;
+      candidato: Partial<Usuario>;
+      alreadyUnlocked: boolean;
+      meta?: UnlockMeta;
+    }
   | { ok: false; error: string; code?: string }
 > {
   const res = await fetch("/api/employers/unlock-candidate", {
@@ -35,6 +46,7 @@ export async function unlockCandidate(
     code?: string;
     candidato?: Partial<Usuario>;
     alreadyUnlocked?: boolean;
+    meta?: UnlockMeta;
   };
 
   if (!res.ok) {
@@ -45,5 +57,6 @@ export async function unlockCandidate(
     ok: true,
     candidato: data.candidato ?? {},
     alreadyUnlocked: Boolean(data.alreadyUnlocked),
+    meta: data.meta,
   };
 }

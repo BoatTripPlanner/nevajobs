@@ -2,17 +2,34 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { AlertCircle, Loader2, Plus, Radar, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  Download,
+  Loader2,
+  Plus,
+  Radar,
+  Sparkles,
+  Wand2,
+} from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { CandidateMatchCard } from "@/components/profile/CandidateMatchCard";
 import { EmpresaPlanStatus } from "@/components/profile/EmpresaPlanStatus";
 import {
   canAccessEmergencyRadar,
+  canExportAts,
+  canUseAiOfferGenerator,
+  canUseAntiFugasFilter,
+  canUseBrandedOffers,
+  canUseCombinedHiring,
   canUseCouplesFilter,
+  canUseMobileAlerts,
   canUseVerifiedFilter,
+  canUseVisaFilter,
+  getReliabilityTier,
   isCoupleCandidate,
   isEmergencyCandidate,
 } from "@/lib/billing/plan-access";
+import { findCombinedHiringSuggestions } from "@/lib/match/combined-hiring";
 import { fetchUnlockedCandidateIds } from "@/lib/data/desbloqueos-client";
 import {
   createOferta,
@@ -36,8 +53,13 @@ export function EmpresaDashboard() {
   const [posting, setPosting] = useState(false);
   const [couplesOnly, setCouplesOnly] = useState(false);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [visaOnly, setVisaOnly] = useState(false);
+  const [reliableOnly, setReliableOnly] = useState(false);
   const [unlockError, setUnlockError] = useState<string | null>(null);
   const [idToken, setIdToken] = useState<string>("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiDraft, setAiDraft] = useState<{ titulo: string; descripcion: string } | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     if (!profile?.uid || !user) return;
@@ -72,8 +94,16 @@ export function EmpresaDashboard() {
     if (verifiedOnly) {
       list = list.filter((c) => c.verificado_nevajobs === true);
     }
+    if (visaOnly) {
+      list = list.filter((c) => c.permiso_trabajo_ue === true);
+    }
+    if (reliableOnly) {
+      list = list.filter(
+        (c) => getReliabilityTier(c.temporadas_completadas) !== "new",
+      );
+    }
     return list;
-  }, [candidatos, couplesOnly, verifiedOnly]);
+  }, [candidatos, couplesOnly, verifiedOnly, visaOnly, reliableOnly]);
 
   const emergencyCandidates = useMemo(
     () => filteredCandidatos.filter(isEmergencyCandidate),
@@ -86,6 +116,17 @@ export function EmpresaDashboard() {
   const hasEmergencyAccess = canAccessEmergencyRadar(profile);
   const hasCouplesFilter = canUseCouplesFilter(profile);
   const hasVerifiedFilter = canUseVerifiedFilter(profile);
+  const hasVisaFilter = canUseVisaFilter(profile);
+  const hasAntiFugas = canUseAntiFugasFilter(profile);
+  const hasAiOffers = canUseAiOfferGenerator(profile);
+  const hasCombined = canUseCombinedHiring(profile);
+  const hasAtsExport = canExportAts(profile);
+  const hasBranded = canUseBrandedOffers(profile);
+  const hasMobileAlerts = canUseMobileAlerts(profile);
+
+  const combinedSuggestions = hasCombined
+    ? findCombinedHiringSuggestions(activeOfertas, filteredCandidatos)
+    : [];
 
   const matches = activeOfertas
     .flatMap((oferta) =>
@@ -114,6 +155,7 @@ export function EmpresaDashboard() {
     try {
       await createOferta({
         titulo: String(form.get("titulo") ?? ""),
+        descripcion: String(form.get("descripcion") ?? "") || aiDraft?.descripcion,
         empresa_id: profile.uid,
         nombre_empresa: profile.nombre,
         pais: String(form.get("pais") ?? ""),
@@ -124,7 +166,14 @@ export function EmpresaDashboard() {
         acepta_parejas: form.get("parejas") === "on",
         idiomas_requeridos: idiomas,
         zona_economica: (form.get("zona") as ZonaEconomica) || "UE",
+        destacada: hasBranded && form.get("destacada") === "on",
+        marca_personalizada: hasBranded && form.get("marca") === "on",
+        url_logo: hasBranded ? String(form.get("url_logo") ?? "") || undefined : undefined,
+        url_foto_instalacion: hasBranded
+          ? String(form.get("url_foto") ?? "") || undefined
+          : undefined,
       });
+      setAiDraft(null);
 
       const jobs = await getEmpresaOfertas(profile.uid);
       setOfertas(jobs);
@@ -139,6 +188,59 @@ export function EmpresaDashboard() {
     setUnlockedIds((prev) => new Set([...prev, candidatoId]));
     setUnlockError(null);
     await refreshProfile();
+  }
+
+  async function handleGenerateOffer(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!hasAiOffers || !idToken) return;
+    setAiLoading(true);
+    const form = new FormData(e.currentTarget);
+    try {
+      const res = await fetch("/api/employers/generate-offer", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rol: form.get("ai_rol"),
+          estacion: form.get("ai_estacion"),
+          idioma: form.get("ai_idioma"),
+        }),
+      });
+      if (!res.ok) {
+        setUnlockError(t("aiOfferFailed"));
+        return;
+      }
+      const data = (await res.json()) as { titulo: string; descripcion: string };
+      setAiDraft(data);
+      setShowJobForm(true);
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  async function handleAtsExport() {
+    if (!idToken || !hasAtsExport) return;
+    setExporting(true);
+    try {
+      const res = await fetch("/api/employers/ats-export", {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      if (!res.ok) {
+        setUnlockError(t("atsExportFailed"));
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "nevajobs-candidates.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
   }
 
   if (loading) {
@@ -182,14 +284,45 @@ export function EmpresaDashboard() {
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="text-sm font-semibold text-slate-900">{t("candidateFilters")}</h3>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="text-sm font-semibold text-slate-900">{t("candidateFilters")}</h3>
+          {hasAtsExport && (
+            <button
+              type="button"
+              onClick={handleAtsExport}
+              disabled={exporting}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-800 disabled:opacity-60"
+            >
+              {exporting ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Download className="h-3.5 w-3.5" />
+              )}
+              {t("atsExport")}
+            </button>
+          )}
+        </div>
         <div className="mt-3 flex flex-wrap gap-3">
+          <FilterToggle
+            label={t("visaFilter")}
+            checked={visaOnly}
+            disabled={!hasVisaFilter}
+            lockedHint={t("starterRequired")}
+            onChange={setVisaOnly}
+          />
           <FilterToggle
             label={t("couplesFilter")}
             checked={couplesOnly}
             disabled={!hasCouplesFilter}
             lockedHint={t("proRequired")}
             onChange={setCouplesOnly}
+          />
+          <FilterToggle
+            label={t("antiFugasFilter")}
+            checked={reliableOnly}
+            disabled={!hasAntiFugas}
+            lockedHint={t("proRequired")}
+            onChange={setReliableOnly}
           />
           <FilterToggle
             label={t("verifiedFilter")}
@@ -199,7 +332,70 @@ export function EmpresaDashboard() {
             onChange={setVerifiedOnly}
           />
         </div>
+        {hasMobileAlerts && (
+          <p className="mt-3 text-xs text-slate-500">{t("mobileAlertsActive")}</p>
+        )}
       </section>
+
+      {hasAiOffers && (
+        <section className="rounded-2xl border border-cyan-200 bg-gradient-to-br from-cyan-50/80 to-white p-5 shadow-sm">
+          <div className="mb-3 flex items-center gap-2">
+            <Wand2 className="h-5 w-5 text-cyan-600" />
+            <h2 className="text-lg font-bold text-slate-900">{t("aiOfferGenerator")}</h2>
+          </div>
+          <p className="text-sm text-slate-600">{t("aiOfferDesc")}</p>
+          <form onSubmit={handleGenerateOffer} className="mt-4 grid gap-3 sm:grid-cols-3">
+            <input
+              name="ai_rol"
+              required
+              placeholder={t("aiRolPlaceholder")}
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            />
+            <input
+              name="ai_estacion"
+              required
+              placeholder={t("aiResortPlaceholder")}
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            />
+            <input
+              name="ai_idioma"
+              required
+              placeholder={t("aiLangPlaceholder")}
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            />
+            <button
+              type="submit"
+              disabled={aiLoading}
+              className="sm:col-span-3 inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {aiLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {t("generateOffer")}
+            </button>
+          </form>
+        </section>
+      )}
+
+      {hasCombined && combinedSuggestions.length > 0 && (
+        <section className="rounded-2xl border border-indigo-200 bg-indigo-50/40 p-5">
+          <h2 className="text-lg font-bold text-slate-900">{t("combinedHiring")}</h2>
+          <p className="mt-1 text-sm text-slate-600">{t("combinedHiringDesc")}</p>
+          <ul className="mt-4 space-y-3">
+            {combinedSuggestions.map((s) => (
+              <li
+                key={`${s.ofertaA.id}-${s.ofertaB.id}-${s.candidatoA.uid}`}
+                className="rounded-xl border border-indigo-100 bg-white p-4 text-sm"
+              >
+                <p className="font-medium text-slate-900">
+                  {s.candidatoA.nombre} + {s.candidatoB.nombre}
+                </p>
+                <p className="mt-1 text-slate-600">
+                  {s.ofertaA.titulo} · {s.ofertaB.titulo} — {s.score}% match
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section
         className={`rounded-2xl border p-5 ${
@@ -260,7 +456,23 @@ export function EmpresaDashboard() {
             onSubmit={handlePostJob}
             className="mb-6 space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
           >
-            <Field label={t("jobTitle")} name="titulo" required />
+            <Field
+              label={t("jobTitle")}
+              name="titulo"
+              defaultValue={aiDraft?.titulo}
+              required
+            />
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+                {t("jobDescription")}
+              </span>
+              <textarea
+                name="descripcion"
+                rows={4}
+                defaultValue={aiDraft?.descripcion}
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+              />
+            </label>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label={t("country")} name="pais" required />
               <Field label={t("resort")} name="estacion" required />
@@ -304,6 +516,20 @@ export function EmpresaDashboard() {
                 <span className="text-xs text-slate-400">(Pro+)</span>
               )}
             </label>
+            {hasBranded && (
+              <>
+                <label className="flex items-center gap-2 text-sm text-slate-700">
+                  <input type="checkbox" name="marca" className="rounded text-cyan-600" />
+                  {t("brandedOffer")}
+                </label>
+                <label className="flex items-center gap-2 text-sm text-slate-700">
+                  <input type="checkbox" name="destacada" className="rounded text-cyan-600" />
+                  {t("featuredOffer")}
+                </label>
+                <Field label={t("logoUrl")} name="url_logo" placeholder="https://..." />
+                <Field label={t("photoUrl")} name="url_foto" placeholder="https://..." />
+              </>
+            )}
             <button
               type="submit"
               disabled={posting}
@@ -405,11 +631,13 @@ function Field({
   name,
   placeholder,
   required,
+  defaultValue,
 }: {
   label: string;
   name: string;
   placeholder?: string;
   required?: boolean;
+  defaultValue?: string;
 }) {
   return (
     <label className="block">
@@ -420,6 +648,7 @@ function Field({
         name={name}
         placeholder={placeholder}
         required={required}
+        defaultValue={defaultValue}
         className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
       />
     </label>

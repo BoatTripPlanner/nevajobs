@@ -7,6 +7,13 @@ export async function GET(request: Request) {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const data = await fetchAdminDashboardData();
-  return Response.json(data);
+  try {
+    const data = await fetchAdminDashboardData();
+    return Response.json(data);
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Admin stats unavailable";
+    console.error("[admin/stats]", err);
+    return Response.json({ error: message }, { status: 500 });
+  }
 }

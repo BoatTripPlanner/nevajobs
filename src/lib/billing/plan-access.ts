@@ -92,3 +92,40 @@ export function isCoupleCandidate(candidato: Usuario): boolean {
 export function isEmergencyCandidate(candidato: Usuario): boolean {
   return candidato.disponibilidad_inmediata && Boolean(candidato.en_estacion);
 }
+
+export function canUseVisaFilter(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].visaFilter;
+}
+
+export function canUseAiOfferGenerator(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].aiOfferGenerator;
+}
+
+export function canUseCombinedHiring(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].combinedHiring;
+}
+
+export function canUseAntiFugasFilter(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].antiFugasFilter;
+}
+
+export function canExportAts(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].atsExport;
+}
+
+export function canUseBrandedOffers(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].brandedOffers;
+}
+
+export function canUseMobileAlerts(profile: Usuario | null): boolean {
+  return PLAN_LIMITS[getEffectivePlan(profile)].mobileAlerts;
+}
+
+export function getReliabilityTier(
+  temporadas: number | undefined,
+): "new" | "reliable" | "veteran" {
+  const n = temporadas ?? 0;
+  if (n >= 3) return "veteran";
+  if (n >= 1) return "reliable";
+  return "new";
+}

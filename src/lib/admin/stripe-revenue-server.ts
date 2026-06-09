@@ -72,30 +72,20 @@ export async function fetchStripeRevenueData(): Promise<StripeRevenueData> {
     0,
   );
 
-  const recentCharges: StripeChargeRow[] = await Promise.all(
-    charges.data.slice(0, 15).map(async (charge) => {
-      let customerEmail: string | null = null;
-      if (typeof charge.customer === "string") {
-        try {
-          const customer = await stripe.customers.retrieve(charge.customer);
-          if (!customer.deleted && "email" in customer) {
-            customerEmail = customer.email;
-          }
-        } catch {
-          customerEmail = null;
-        }
-      }
-      return {
-        id: charge.id,
-        amount: charge.amount,
-        currency: charge.currency,
-        status: charge.status,
-        created: new Date(charge.created * 1000).toISOString(),
-        description: charge.description,
-        customerEmail,
-      };
-    }),
-  );
+  const recentCharges: StripeChargeRow[] = charges.data
+    .slice(0, 15)
+    .map((charge) => ({
+      id: charge.id,
+      amount: charge.amount,
+      currency: charge.currency,
+      status: charge.status,
+      created: new Date(charge.created * 1000).toISOString(),
+      description: charge.description,
+      customerEmail:
+        typeof charge.billing_details?.email === "string"
+          ? charge.billing_details.email
+          : null,
+    }));
 
   return {
     currency: "eur",

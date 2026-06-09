@@ -158,8 +158,9 @@
       "cta": "Choose Starter",
       "features": {
         "post": "Unlimited job listings",
-        "unlocks": "10 candidate unlocks/month (CV, voice, contact)",
-        "filters": "Language & sport modality filters",
+        "unlocks": "15 candidate unlocks/month (CV, voice, contact)",
+        "filters": "EU work permit / visa filter",
+        "ai": "AI job offer generator",
         "badge": "Basic listing badge"
       }
     },
@@ -171,7 +172,9 @@
       "features": {
         "unlocks": "Unlimited candidate unlocks",
         "emergency": "Emergency Radar (immediate availability)",
-        "couples": "Couples & double-room filter",
+        "couples": "Combined hiring (couples for 2 roles)",
+        "video": "15s candidate video intro",
+        "antiFugas": "Anti no-show tag (seasons completed)",
         "chat": "Unlimited real-time chat"
       }
     },
@@ -181,7 +184,9 @@
       "cta": "Contact Enterprise",
       "features": {
         "allPro": "Everything in Pro, unlimited",
-        "featured": "3 featured job offers/month",
+        "featured": "Branded offers (logo + facility photos)",
+        "ats": "ATS export to your HR software",
+        "alerts": "Telegram/WhatsApp Top candidate alerts",
         "verified": "Nevajobs-verified candidates filter",
         "support": "Priority WhatsApp support",
         "multiAccount": "Multi-account HR team access"
@@ -190,7 +195,7 @@
     "comparison": {
       "title": "Feature",
       "candidate": "Candidate",
-      "starterUnlocks": "10/mo",
+      "starterUnlocks": "15/mo",
       "unlimited": "Unlimited",
       "featuredIncluded": "3/mo free",
       "rows": {
@@ -334,7 +339,45 @@
     "emergencyRadar": "Emergency Radar",
     "emergencyRadarDesc": "Candidates with immediate availability physically in resort.",
     "emergencyRadarLocked": "Available on Pro and Enterprise. Find replacements in hours, not days.",
-    "noEmergencyCandidates": "No in-resort candidates with immediate availability right now."
+    "noEmergencyCandidates": "No in-resort candidates with immediate availability right now.",
+    "unlockHintPremium": "CV, audio, Pro video, 30-day chat. Credits: 7-day guarantee with official docs.",
+    "visaFilter": "EU/EEA work permit only",
+    "antiFugasFilter": "Anti no-show (1+ seasons)",
+    "starterRequired": "Requires Starter plan",
+    "aiOfferGenerator": "AI offer generator",
+    "aiOfferDesc": "3 inputs → job post in the resort's local language.",
+    "aiRolPlaceholder": "e.g. Waiter",
+    "aiResortPlaceholder": "e.g. Chamonix",
+    "aiLangPlaceholder": "e.g. Fluent English",
+    "generateOffer": "Generate offer with AI",
+    "aiOfferFailed": "Could not generate offer.",
+    "combinedHiring": "Combined hiring",
+    "combinedHiringDesc": "Couples or friends matching two open roles at once.",
+    "atsExport": "Export to ATS (CSV)",
+    "atsExportFailed": "Export failed.",
+    "mobileAlertsActive": "Mobile alerts on: Telegram/WhatsApp when a Top candidate registers in your area.",
+    "jobDescription": "Job description",
+    "brandedOffer": "Branded design (large logo)",
+    "featuredOffer": "Featured listing",
+    "logoUrl": "Logo URL",
+    "photoUrl": "Facility photo URL",
+    "visaOk": "EU/EEA permit",
+    "visaRequired": "Visa/paperwork required",
+    "reliability": {
+      "new": "First season",
+      "reliable": "1+ seasons OK",
+      "veteran": "Veteran (3+ seasons)"
+    },
+    "chatUntil": "Chat active until {date}",
+    "watchVideoIntro": "Watch 15s video",
+    "requestRefund": "Request credit refund (7 days)",
+    "refundDocsHint": "Provide URLs of official alta and baja documents.",
+    "docAltaPlaceholder": "Official ALTA document URL",
+    "docBajaPlaceholder": "Official BAJA document URL",
+    "refundReasonPlaceholder": "Reason (no reply, already hired...)",
+    "submitRefund": "Submit and recover credit",
+    "refundApproved": "Credit refunded automatically.",
+    "refundFailed": "Refund could not be processed."
   },
   "match": {
     "score": "{score}% match",

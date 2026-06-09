@@ -4,10 +4,28 @@ import { resolve } from "node:path";
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
+function normalizeServiceAccount(
+  raw: Record<string, unknown>,
+): Record<string, unknown> {
+  const account = { ...raw };
+  if (typeof account.private_key === "string") {
+    account.private_key = account.private_key.replace(/\\n/g, "\n");
+  }
+  return account;
+}
+
 function loadServiceAccount(): Record<string, unknown> {
   const jsonEnv = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (jsonEnv) {
-    return JSON.parse(jsonEnv) as Record<string, unknown>;
+    try {
+      return normalizeServiceAccount(
+        JSON.parse(jsonEnv) as Record<string, unknown>,
+      );
+    } catch {
+      throw new Error(
+        "FIREBASE_SERVICE_ACCOUNT is invalid JSON. Re-run npm run setup:vercel-env.",
+      );
+    }
   }
 
   const serviceAccountPath =
@@ -20,10 +38,12 @@ function loadServiceAccount(): Record<string, unknown> {
     );
   }
 
-  return JSON.parse(readFileSync(serviceAccountPath, "utf8")) as Record<
-    string,
-    unknown
-  >;
+  return normalizeServiceAccount(
+    JSON.parse(readFileSync(serviceAccountPath, "utf8")) as Record<
+      string,
+      unknown
+    >,
+  );
 }
 
 export function initAdminApp(): App {

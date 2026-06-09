@@ -29,17 +29,18 @@ export async function recalculateLiveStats(): Promise<LiveStats> {
 
   const [ofertasSnap, candidatosSnap] = await Promise.all([
     db.collection(COLLECTIONS.OFERTAS).where("activa", "==", true).get(),
-    db
-      .collection(COLLECTIONS.USUARIOS)
-      .where("rol", "==", "candidato")
-      .where("disponibilidad_inmediata", "==", true)
-      .get(),
+    // Single-field query avoids composite index requirement in production
+    db.collection(COLLECTIONS.USUARIOS).where("rol", "==", "candidato").get(),
   ]);
+
+  const availableCandidates = candidatosSnap.docs.filter(
+    (doc) => doc.data().disponibilidad_inmediata === true,
+  ).length;
 
   const stats = {
     id: STATS_DOC_ID,
     ofertas_activas: ofertasSnap.size,
-    candidatos_disponibles: candidatosSnap.size,
+    candidatos_disponibles: availableCandidates,
     paises_top_contratacion: topCountriesFromOfertas(ofertasSnap.docs),
     actualizado_en: Timestamp.now(),
   };

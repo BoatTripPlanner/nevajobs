@@ -132,10 +132,12 @@
       "body": "Barra libre de CVs y Radar de Emergencia gratis en noviembre. Pierdes un camarero en el puente de diciembre → sustituto en 2 horas."
     },
     "credits": {
-      "title": "Créditos sueltos — ideal para probar",
-      "description": "5€ para desbloquear datos, PDF y audio de un candidato. Ridículo para un negocio que necesita salvar el fin de semana. Sin suscripción.",
+      "title": "Créditos sueltos — el gancho",
+      "description": "5€ por candidato: CV, PDF, audio y chat 30 días. Garantía de sustitución 7 días con documentos oficiales de alta/baja si no responde o ya tiene trabajo. Riesgo cero.",
       "perCredit": "/ crédito",
-      "cta": "Comprar créditos"
+      "cta": "Comprar créditos",
+      "guarantee": "Garantía 7 días + devolución automática",
+      "chat30": "Chat directo 30 días incluido"
     },
     "free": {
       "name": "Gratis",
@@ -158,8 +160,9 @@
       "cta": "Elegir Starter",
       "features": {
         "post": "Ofertas ilimitadas",
-        "unlocks": "10 desbloqueos/mes (CV, audio, contacto)",
-        "filters": "Filtro por idiomas y modalidades",
+        "unlocks": "15 desbloqueos/mes (CV, audio, contacto)",
+        "filters": "Filtro permiso de trabajo / visado UE",
+        "ai": "Generador de ofertas con IA",
         "badge": "Etiqueta básica en ofertas"
       }
     },
@@ -171,7 +174,9 @@
       "features": {
         "unlocks": "Desbloqueos ILIMITADOS",
         "emergency": "Radar de Emergencia (disponibilidad inmediata)",
-        "couples": "Filtro de parejas y alojamiento doble",
+        "couples": "Contratación combinada (parejas en 2 vacantes)",
+        "video": "Video-presentación 15 s del candidato",
+        "antiFugas": "Tag anti-fugas (temporadas completadas)",
         "chat": "Chat en tiempo real ilimitado"
       }
     },
@@ -181,7 +186,9 @@
       "cta": "Contactar Enterprise",
       "features": {
         "allPro": "Todo lo del Pro, ilimitado",
-        "featured": "3 ofertas destacadas/mes",
+        "featured": "Ofertas de marca (logo + fotos destacadas)",
+        "ats": "Exportación ATS a tu software RRHH",
+        "alerts": "Alertas Telegram/WhatsApp de candidatos Top",
         "verified": "Filtro candidatos verificados por Nevajobs",
         "support": "Soporte prioritario WhatsApp",
         "multiAccount": "Multi-cuenta para equipo RRHH"
@@ -190,7 +197,7 @@
     "comparison": {
       "title": "Característica",
       "candidate": "Candidato",
-      "starterUnlocks": "10/mes",
+      "starterUnlocks": "15/mes",
       "unlimited": "Ilimitado",
       "featuredIncluded": "3/mes gratis",
       "rows": {
@@ -321,6 +328,44 @@
     "buyCredits": "Comprar créditos",
     "unlockCandidate": "Desbloquear candidato",
     "unlockHint": "1 desbloqueo = CV PDF, audio y chat (5€ sin plan, incluido en tu suscripción)",
+    "unlockHintPremium": "CV, audio, video Pro, chat 30 días. Créditos: garantía 7 días con docs oficiales.",
+    "visaFilter": "Solo con permiso UE/EEE",
+    "antiFugasFilter": "Anti-fugas (1+ temporadas)",
+    "starterRequired": "Requiere plan Starter",
+    "aiOfferGenerator": "Generador de ofertas IA",
+    "aiOfferDesc": "3 datos → oferta redactada en el idioma local de la estación.",
+    "aiRolPlaceholder": "Ej: Camarero",
+    "aiResortPlaceholder": "Ej: Chamonix",
+    "aiLangPlaceholder": "Ej: Inglés alto",
+    "generateOffer": "Generar oferta con IA",
+    "aiOfferFailed": "No se pudo generar la oferta.",
+    "combinedHiring": "Contratación combinada",
+    "combinedHiringDesc": "Parejas o amigos que encajan en dos vacantes a la vez — alojamiento resuelto.",
+    "atsExport": "Exportar a ATS (CSV)",
+    "atsExportFailed": "No se pudo exportar.",
+    "mobileAlertsActive": "Alertas móvil activas: recibirás Telegram/WhatsApp cuando un candidato Top se registre en tu zona.",
+    "jobDescription": "Descripción de la oferta",
+    "brandedOffer": "Diseño de marca (logo grande)",
+    "featuredOffer": "Oferta destacada",
+    "logoUrl": "URL del logo",
+    "photoUrl": "URL foto instalaciones",
+    "visaOk": "Permiso UE/EEE",
+    "visaRequired": "Requiere visado/trámites",
+    "reliability": {
+      "new": "Primera temporada",
+      "reliable": "1+ temporadas OK",
+      "veteran": "Veterano (3+ temporadas)"
+    },
+    "chatUntil": "Chat activo hasta {date}",
+    "watchVideoIntro": "Ver video 15 s",
+    "requestRefund": "Solicitar devolución de crédito (7 días)",
+    "refundDocsHint": "Adjunta URLs de documentos oficiales: alta en empresa y baja/no incorporación.",
+    "docAltaPlaceholder": "URL documento oficial de ALTA",
+    "docBajaPlaceholder": "URL documento oficial de BAJA",
+    "refundReasonPlaceholder": "Motivo (no responde, ya contratado...)",
+    "submitRefund": "Enviar y recuperar crédito",
+    "refundApproved": "Crédito devuelto automáticamente.",
+    "refundFailed": "No se pudo procesar la devolución.",
     "profileUnlocked": "Perfil desbloqueado",
     "certification": "Titulación",
     "contactEmail": "Email",
