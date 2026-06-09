@@ -21,7 +21,7 @@ export interface RegisterInput {
 
 function buildUsuarioDoc(
   uid: string,
-  input: RegisterInput,
+  input: Pick<RegisterInput, "nombre" | "email" | "rol" | "pais_origen">,
 ): Omit<Usuario, "created_at" | "updated_at"> {
   return {
     uid,
