@@ -36,11 +36,12 @@ yarn-error.log*
 # Firebase service account (never commit)
 firebase/service-account.json
 
+# cursor IDE
+.cursor/
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
