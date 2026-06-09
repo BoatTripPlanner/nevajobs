@@ -17,21 +17,11 @@ export interface RegisterInput {
   password: string;
   rol: RolUsuario;
   pais_origen: string;
-  disponibilidad_inmediata?: boolean;
-  permiso_trabajo_ue?: boolean;
 }
 
 function buildUsuarioDoc(
   uid: string,
-  input: Pick<
-    RegisterInput,
-    | "nombre"
-    | "email"
-    | "rol"
-    | "pais_origen"
-    | "disponibilidad_inmediata"
-    | "permiso_trabajo_ue"
-  >,
+  input: RegisterInput,
 ): Omit<Usuario, "created_at" | "updated_at"> {
   return {
     uid,
@@ -42,8 +32,8 @@ function buildUsuarioDoc(
     creditos_disponibles: 0,
     idiomas_hablados: [],
     pais_origen: input.pais_origen.trim(),
-    disponibilidad_inmediata: input.disponibilidad_inmediata ?? false,
-    permiso_trabajo_ue: input.permiso_trabajo_ue ?? false,
+    disponibilidad_inmediata: false,
+    permiso_trabajo_ue: false,
     valoracion_media: 0,
   };
 }

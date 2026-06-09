@@ -27,8 +27,6 @@ export function RegisterForm({
   const [password, setPassword] = useState("");
   const [paisOrigen, setPaisOrigen] = useState("");
   const [rol, setRol] = useState<RolUsuario>(defaultRol ?? "candidato");
-  const [disponibilidadInmediata, setDisponibilidadInmediata] = useState(false);
-  const [permisoTrabajoUe, setPermisoTrabajoUe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,8 +49,6 @@ export function RegisterForm({
         password,
         rol,
         pais_origen: paisOrigen,
-        disponibilidad_inmediata: rol === "candidato" ? disponibilidadInmediata : false,
-        permiso_trabajo_ue: rol === "candidato" ? permisoTrabajoUe : false,
       });
       afterAuthRedirect();
     } catch (err) {
@@ -133,21 +129,6 @@ export function RegisterForm({
           required
         />
 
-        {rol === "candidato" && (
-          <div className="space-y-2 rounded-xl border border-slate-200 bg-sky-50/50 p-4">
-            <Checkbox
-              checked={disponibilidadInmediata}
-              onChange={setDisponibilidadInmediata}
-              label={t("immediateAvailability")}
-            />
-            <Checkbox
-              checked={permisoTrabajoUe}
-              onChange={setPermisoTrabajoUe}
-              label={t("euWorkPermit")}
-            />
-          </div>
-        )}
-
         <button
           type="submit"
           disabled={loading}
@@ -220,28 +201,6 @@ function Field({
         minLength={minLength}
         className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
       />
-    </label>
-  );
-}
-
-function Checkbox({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
-  return (
-    <label className="flex cursor-pointer items-start gap-3">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-cyan-600"
-      />
-      <span className="text-sm text-slate-700">{label}</span>
     </label>
   );
 }
