@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nevajobs — Winter Season Jobs in Europe",
+  title: "Nevajobs — Professional Seasonal Jobs in the Private Snow Sector",
   description:
-    "Premium job portal for the private snow sector across the Alps & Pyrenees.",
+    "Serious professionals and serious employers in the private snow sector across the Alps & Pyrenees.",
 };
 
 export default function RootLayout({

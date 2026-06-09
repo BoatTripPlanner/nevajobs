@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -17,12 +18,14 @@ interface AuthContextValue {
   user: User | null;
   profile: Usuario | null;
   loading: boolean;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
   user: null,
   profile: null,
   loading: true,
+  refreshProfile: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -57,9 +60,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const refreshProfile = useCallback(async () => {
+    const current = auth.currentUser;
+    if (!current) return;
+    const snap = await getDoc(doc(db, COLLECTIONS.USUARIOS, current.uid));
+    setProfile(
+      snap.exists() ? ({ uid: snap.id, ...snap.data() } as Usuario) : null,
+    );
+  }, []);
+
   const value = useMemo(
-    () => ({ user, profile, loading }),
-    [user, profile, loading],
+    () => ({ user, profile, loading, refreshProfile }),
+    [user, profile, loading, refreshProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

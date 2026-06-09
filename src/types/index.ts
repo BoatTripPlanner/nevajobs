@@ -23,6 +23,7 @@ export const COLLECTIONS = {
   USUARIOS: "usuarios",
   OFERTAS: "ofertas",
   POSTULACIONES: "postulaciones",
+  DESBLOQUEOS: "desbloqueos",
   CHATS: "chats",
   MENSAJES: "mensajes", // subcolección: chats/{chatId}/mensajes
   ESTADISTICAS_EN_VIVO: "estadisticas_en_vivo",
@@ -38,6 +39,8 @@ export const STORAGE_PATHS = {
 // ---------------------------------------------------------------------------
 
 export type RolUsuario = "candidato" | "empresa";
+
+export type PlanEmpresa = "gratis" | "starter" | "pro" | "enterprise";
 
 export type CategoriaOferta = "hoteles" | "escuelas" | "alquiler" | "oficina";
 
@@ -72,8 +75,16 @@ export interface Usuario {
 
   /** Empresa: acceso Premium para desbloquear CVs, chat y valoraciones. */
   es_premium: boolean;
-  /** Empresa: créditos para contactos premium (si aplica modelo por crédito). */
+  /** Empresa: plan activo (gratis | starter | pro | enterprise). */
+  plan_empresa?: PlanEmpresa;
+  /** Empresa: créditos pay-per-use (1 crédito = 1 desbloqueo de candidato). */
   creditos_disponibles: number;
+  /** Empresa Starter: desbloqueos consumidos en el mes actual. */
+  desbloqueos_mes_usados?: number;
+  /** Mes ISO (YYYY-MM) del contador de desbloqueos. */
+  desbloqueos_mes_reset_mes?: string;
+  /** Empresa Enterprise: ofertas destacadas usadas este mes. */
+  ofertas_destacadas_mes_usadas?: number;
 
   /** Candidato: titulación de instructor (ej. BASI, ESF, AASI). */
   titulacion?: string;
@@ -106,6 +117,21 @@ export interface Usuario {
   rol_buscado?: string;
   /** Candidato: confirmación de estar físicamente en estación. */
   en_estacion?: boolean;
+
+  /** Empresa: descripción breve de la empresa. */
+  descripcion_empresa?: string;
+  /** Empresa: categorías en las que contrata habitualmente. */
+  categorias_contratacion?: CategoriaOferta[];
+  /** Empresa: estaciones donde opera o contrata. */
+  estaciones_operacion?: string[];
+  /** Empresa: sitio web (opcional). */
+  sitio_web?: string;
+
+  /** true cuando el usuario completó el onboarding de perfil. */
+  perfil_completo?: boolean;
+
+  /** Candidato verificado por Nevajobs (titulación/visado contrastados). */
+  verificado_nevajobs?: boolean;
 
   /** Metadatos recomendados */
   created_at?: Timestamp;
@@ -176,6 +202,26 @@ export interface Postulacion {
 export type PostulacionInput = Omit<Postulacion, "id" | "fecha_postulacion"> & {
   id?: string;
   fecha_postulacion?: Timestamp;
+};
+
+// ---------------------------------------------------------------------------
+// desbloqueos/{desbloqueoId}
+// Empresa desbloquea candidato (CV, audio, chat)
+// ---------------------------------------------------------------------------
+
+export interface Desbloqueo {
+  id: string;
+  empresa_id: string;
+  candidato_id: string;
+  oferta_id?: string;
+  fecha_desbloqueo: Timestamp;
+  /** Si consumió 1 crédito pay-per-use en lugar de cupo del plan. */
+  uso_credito?: boolean;
+}
+
+export type DesbloqueoInput = Omit<Desbloqueo, "id" | "fecha_desbloqueo"> & {
+  id?: string;
+  fecha_desbloqueo?: Timestamp;
 };
 
 // ---------------------------------------------------------------------------

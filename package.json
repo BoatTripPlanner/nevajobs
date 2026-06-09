@@ -9,8 +9,11 @@
     "lint": "eslint",
     "seed:stats": "node scripts/seed-estadisticas.mjs",
     "seed:all": "node scripts/seed-all.mjs",
+    "seed:test-auth": "node scripts/seed-test-auth.mjs",
+    "seed:creator": "node scripts/seed-creator.mjs",
     "stats:recalculate": "node scripts/recalculate-stats.mjs",
-    "setup:stripe": "node scripts/setup-stripe.mjs"
+    "setup:stripe": "node scripts/setup-stripe.mjs",
+    "setup:stripe-plans": "node scripts/setup-stripe-plans.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",

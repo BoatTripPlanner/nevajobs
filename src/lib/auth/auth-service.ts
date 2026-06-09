@@ -35,6 +35,8 @@ function buildUsuarioDoc(
     disponibilidad_inmediata: false,
     permiso_trabajo_ue: false,
     valoracion_media: 0,
+    perfil_completo: false,
+    plan_empresa: "gratis",
   };
 }
 
@@ -61,6 +63,11 @@ async function triggerStatsRecalculation(): Promise<void> {
   } catch {
     // Non-blocking; Cloud Functions also sync stats on write
   }
+}
+
+export async function fetchUserProfile(uid: string): Promise<Usuario | null> {
+  const snap = await getDoc(doc(db, COLLECTIONS.USUARIOS, uid));
+  return snap.exists() ? ({ uid: snap.id, ...snap.data() } as Usuario) : null;
 }
 
 export async function registerWithEmail(

@@ -1,11 +1,20 @@
 import Stripe from "stripe";
+import type { PlanEmpresa } from "@/types";
 import { getStripe } from "@/lib/stripe";
 import {
-  setUserPremium,
+  addCredits,
+  setUserPlan,
   syncStripeCustomer,
 } from "@/lib/stripe-premium";
 
 export const runtime = "nodejs";
+
+function parsePlan(value: string | undefined): PlanEmpresa {
+  if (value === "starter" || value === "pro" || value === "enterprise") {
+    return value;
+  }
+  return "pro";
+}
 
 export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -44,7 +53,15 @@ export async function POST(request: Request) {
           session.metadata?.firebase_uid ?? session.client_reference_id;
         if (!uid) break;
 
-        await setUserPremium(uid, true);
+        const checkoutType = session.metadata?.checkout_type;
+
+        if (checkoutType === "credits") {
+          const qty = Number(session.metadata?.credit_quantity ?? 1);
+          await addCredits(uid, Number.isFinite(qty) && qty > 0 ? qty : 1);
+        } else {
+          const plan = parsePlan(session.metadata?.plan);
+          await setUserPlan(uid, plan, { resetMonthlyUsage: true });
+        }
 
         if (session.customer && typeof session.customer === "string") {
           const subscriptionId =
@@ -64,7 +81,13 @@ export async function POST(request: Request) {
         const active =
           subscription.status === "active" ||
           subscription.status === "trialing";
-        await setUserPremium(uid, active);
+
+        if (active) {
+          const plan = parsePlan(subscription.metadata?.plan);
+          await setUserPlan(uid, plan);
+        } else {
+          await setUserPlan(uid, "gratis");
+        }
         break;
       }
 
@@ -73,7 +96,7 @@ export async function POST(request: Request) {
         const uid = subscription.metadata?.firebase_uid;
         if (!uid) break;
 
-        await setUserPremium(uid, false);
+        await setUserPlan(uid, "gratis");
         break;
       }
 

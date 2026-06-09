@@ -1,18 +1,48 @@
 import "server-only";
 import { FieldValue } from "firebase-admin/firestore";
+import { planToEsPremium } from "@/lib/billing/plans";
 import { getAdminDb } from "@/lib/firebase-admin";
-import { COLLECTIONS } from "@/types";
+import { COLLECTIONS, type PlanEmpresa } from "@/types";
 
-export async function setUserPremium(
+export async function setUserPlan(
   uid: string,
-  isPremium: boolean,
+  plan: PlanEmpresa,
+  options?: { resetMonthlyUsage?: boolean },
 ): Promise<void> {
   await getAdminDb()
     .collection(COLLECTIONS.USUARIOS)
     .doc(uid)
     .set(
       {
-        es_premium: isPremium,
+        plan_empresa: plan,
+        es_premium: planToEsPremium(plan),
+        ...(options?.resetMonthlyUsage
+          ? {
+              desbloqueos_mes_usados: 0,
+              ofertas_destacadas_mes_usadas: 0,
+            }
+          : {}),
+        updated_at: FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
+}
+
+/** @deprecated Use setUserPlan */
+export async function setUserPremium(
+  uid: string,
+  isPremium: boolean,
+): Promise<void> {
+  await setUserPlan(uid, isPremium ? "pro" : "gratis");
+}
+
+export async function addCredits(uid: string, amount: number): Promise<void> {
+  await getAdminDb()
+    .collection(COLLECTIONS.USUARIOS)
+    .doc(uid)
+    .set(
+      {
+        creditos_disponibles: FieldValue.increment(amount),
         updated_at: FieldValue.serverTimestamp(),
       },
       { merge: true },

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Navbar } from "@/components/home/Navbar";
 import { Hero } from "@/components/home/Hero";
+import { TrustSection } from "@/components/home/TrustSection";
 import { LiveStats } from "@/components/home/LiveStats";
 import { HomeJobsSection } from "@/components/home/HomeJobsSection";
 import { AvailableCandidates } from "@/components/home/AvailableCandidates";
@@ -24,6 +25,7 @@ export default async function HomePage() {
       <Navbar />
       <main>
         <Hero />
+        <TrustSection />
         <LiveStats stats={stats} />
         <HomeJobsSection jobs={jobs} />
         <AvailableCandidates candidates={candidates} />

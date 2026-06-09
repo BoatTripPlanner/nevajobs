@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Nevajobs — Winter Jobs in Europe",
     short_name: "Nevajobs",
     description:
-      "Premium job portal for hotels, ski schools, rental shops and resort offices across the Alps & Pyrenees.",
+      "Serious professionals and serious employers in the private snow sector — hotels, ski schools, rental shops and resort offices across the Alps & Pyrenees.",
     start_url: "/",
     scope: "/",
     display: "standalone",

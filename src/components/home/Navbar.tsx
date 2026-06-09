@@ -6,11 +6,13 @@ import { usePathname, useRouter, Link } from "@/i18n/navigation";
 import {
   ChevronDown,
   Crown,
+  LayoutDashboard,
   Loader2,
   LogIn,
   LogOut,
   UserPlus,
 } from "lucide-react";
+import { isCreatorEmail } from "@/lib/admin/creator";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { signOut } from "@/lib/auth/auth-service";
 import { supportedLocales } from "@/lib/data/filter-keys";
@@ -24,6 +26,7 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, profile, loading } = useAuth();
+  const isCreator = isCreatorEmail(user?.email);
   const [langOpen, setLangOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
@@ -97,20 +100,43 @@ export function Navbar() {
             <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
           ) : user ? (
             <>
-              {profile?.rol === "empresa" && !profile.es_premium && (
+              {!isCreator && profile?.rol === "empresa" && !profile.es_premium && (
                 <Link
                   href="/billing/upgrade"
                   className="hidden items-center gap-1.5 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 text-sm font-medium text-cyan-700 transition hover:bg-cyan-100 sm:inline-flex"
                 >
                   <Crown className="h-4 w-4" />
-                  {t("goPremium")}
+                  {t("plans")}
                 </Link>
               )}
-              {profile?.es_premium && (
+              {!isCreator && profile?.rol === "empresa" && profile.es_premium && profile.plan_empresa && profile.plan_empresa !== "gratis" && (
+                <span className="hidden items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold capitalize text-amber-700 sm:inline-flex">
+                  <Crown className="h-3.5 w-3.5" />
+                  {profile.plan_empresa}
+                </span>
+              )}
+              {!isCreator && profile?.es_premium && !profile.plan_empresa && (
                 <span className="hidden items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 sm:inline-flex">
                   <Crown className="h-3.5 w-3.5" />
                   {t("premium")}
                 </span>
+              )}
+              {isCreator ? (
+                <Link
+                  href="/admin"
+                  className="hidden items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-sm font-medium text-violet-700 transition hover:bg-violet-100 sm:inline-flex"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  {t("admin")}
+                </Link>
+              ) : (
+                <Link
+                  href="/dashboard"
+                  className="hidden items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-sky-50 sm:inline-flex"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  {t("dashboard")}
+                </Link>
               )}
               <span className="hidden max-w-[140px] truncate text-sm text-slate-600 sm:inline">
                 {profile?.nombre ?? user.email}

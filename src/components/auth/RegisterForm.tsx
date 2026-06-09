@@ -9,6 +9,8 @@ import {
   loginWithGoogle,
   registerWithEmail,
 } from "@/lib/auth/auth-service";
+import { isCreatorEmail } from "@/lib/admin/creator";
+import { getPostLoginPath } from "@/lib/profile/profile-service";
 import { GoogleLogo } from "@/components/ui/GoogleLogo";
 import type { RolUsuario } from "@/types";
 
@@ -34,8 +36,12 @@ export function RegisterForm({
     if (defaultRol) setRol(defaultRol);
   }, [defaultRol]);
 
-  function afterAuthRedirect() {
-    router.push(redirectAfter ?? "/");
+  function afterAuthRedirect(userEmail?: string | null) {
+    if (redirectAfter && !isCreatorEmail(userEmail)) {
+      router.push(redirectAfter);
+      return;
+    }
+    router.push(getPostLoginPath(null, undefined, userEmail));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -43,14 +49,14 @@ export function RegisterForm({
     setLoading(true);
     setError(null);
     try {
-      await registerWithEmail({
+      const user = await registerWithEmail({
         nombre,
         email,
         password,
         rol,
         pais_origen: paisOrigen,
       });
-      afterAuthRedirect();
+      afterAuthRedirect(user.email);
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
       setError(tErrors(getAuthErrorKey(code)));
@@ -63,8 +69,8 @@ export function RegisterForm({
     setLoading(true);
     setError(null);
     try {
-      await loginWithGoogle(rol);
-      afterAuthRedirect();
+      const user = await loginWithGoogle(rol);
+      afterAuthRedirect(user.email);
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
       setError(tErrors(getAuthErrorKey(code)));

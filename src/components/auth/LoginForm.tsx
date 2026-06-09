@@ -5,10 +5,12 @@ import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import {
+  fetchUserProfile,
   getAuthErrorKey,
   loginWithEmail,
   loginWithGoogle,
 } from "@/lib/auth/auth-service";
+import { getPostLoginPath } from "@/lib/profile/profile-service";
 import { GoogleLogo } from "@/components/ui/GoogleLogo";
 
 export function LoginForm() {
@@ -25,8 +27,9 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      await loginWithEmail(email, password);
-      router.push("/");
+      const user = await loginWithEmail(email, password);
+      const profile = await fetchUserProfile(user.uid);
+      router.push(getPostLoginPath(profile, undefined, user.email));
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
       setError(tErrors(getAuthErrorKey(code)));
@@ -39,8 +42,9 @@ export function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      await loginWithGoogle();
-      router.push("/");
+      const user = await loginWithGoogle();
+      const profile = await fetchUserProfile(user.uid);
+      router.push(getPostLoginPath(profile, undefined, user.email));
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
       setError(tErrors(getAuthErrorKey(code)));
@@ -109,6 +113,10 @@ export function LoginForm() {
         <Link href="/register" className="font-medium text-cyan-600 hover:text-cyan-700">
           {t("registerFree")}
         </Link>
+      </p>
+
+      <p className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-center text-xs text-slate-500">
+        {t("testAccounts")}
       </p>
     </div>
   );

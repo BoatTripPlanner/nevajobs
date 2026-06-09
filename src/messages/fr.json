@@ -4,14 +4,24 @@
     "register": "S'inscrire",
     "signOut": "Déconnexion",
     "goPremium": "Passer Premium",
-    "premium": "Premium"
+    "premium": "Premium",
+    "plans": "Offres",
+    "dashboard": "Tableau de bord"
   },
   "hero": {
-    "badge": "Secteur privé de la neige · Europe",
+    "badge": "Professionnels sérieux · Secteur privé de la neige",
     "titleBefore": "Trouvez votre prochain",
     "titleHighlight": "job de saison",
     "titleAfter": "en Europe",
-    "subtitle": "Le portail premium pour hôtels, écoles de ski privées, magasins de location et bureaux en station dans les Alpes et les Pyrénées. Pour les talents transfrontaliers — candidats gratuits, recruteurs plus efficaces."
+    "subtitle": "La plateforme professionnelle qui connecte des candidats engagés avec des employeurs sérieux du secteur privé de la neige — hôtels, écoles, magasins et bureaux dans les Alpes et les Pyrénées."
+  },
+  "trust": {
+    "title": "Des personnes sérieuses qui cherchent du travail. Des entreprises sérieuses qui recrutent.",
+    "subtitle": "Nevajobs n'est pas un site d'annonces générique. Des professionnels viennent ici pour travailler pour de vrai, et des employeurs du secteur qui recrutent avec intention.",
+    "candidatesTitle": "Candidats professionnels",
+    "candidatesDesc": "Profils complets, langues vérifiables et disponibilité honnête. Pour ceux qui s'engagent sur toute la saison — pas pour faire du tourisme.",
+    "companiesTitle": "Employeurs qui recrutent sérieusement",
+    "companiesDesc": "Hôtels, écoles privées, magasins et bureaux qui publient de vraies offres et cherchent des travailleurs fiables pour toute la saison."
   },
   "stats": {
     "live": "Statistiques en direct",
@@ -75,7 +85,7 @@
   },
   "jobs": {
     "title": "Dernières opportunités",
-    "subtitle": "Postes du secteur privé dans les meilleures stations d'Europe",
+    "subtitle": "Offres réelles d'employeurs sérieux dans les meilleures stations d'Europe",
     "viewAll": "Voir toutes les offres →",
     "emptyTitle": "Aucune offre ne correspond à votre recherche.",
     "emptySubtitle": "Revenez bientôt — de nouvelles offres sont publiées chaque jour.",
@@ -110,43 +120,91 @@
     "pause": "Mettre en pause l'intro audio"
   },
   "pricing": {
-    "title": "Tarifs simples pour les employeurs",
-    "subtitle": "Les candidats rejoignent toujours gratuitement. Les entreprises publient gratuitement — débloquez les outils premium quand vous êtes prêt à recruter.",
-    "footnote": "Facturation saisonnière · Annulez à tout moment · Les candidats ne paient jamais",
-    "mostPopular": "Le plus populaire",
+    "title": "No-excuses pricing for employers",
+    "subtitle": "No excuse not to hire: €5 per candidate, plans from €39/month. Candidates always free.",
+    "seasonNote": "Winter season Nov–Mar · Summer free for employers · Cancel anytime",
+    "footnote": "€5 to save your weekend · Plans cheaper than dinner out · Secure Stripe payments",
+    "mostPopular": "Best seller",
+    "perMonth": "/ month",
+    "launchPromo": {
+      "title": "November launch: first month Pro 100% FREE",
+      "body": "Unlimited CVs and Emergency Radar free in November. Lose a waiter over the December bridge → replacement in 2 hours."
+    },
+    "credits": {
+      "title": "Single credits — try before you subscribe",
+      "description": "€5 to unlock a candidate's data, PDF and voice intro. Pocket change to save your weekend. No subscription.",
+      "perCredit": "/ credit",
+      "cta": "Buy credits"
+    },
     "free": {
-      "name": "Gratuit",
+      "name": "Free",
       "price": "€0",
-      "period": "/ à vie",
-      "description": "Publiez des offres et touchez les talents saisonniers en Europe.",
-      "cta": "Commencer gratuitement",
+      "period": "/ forever",
+      "description": "Post jobs and see candidate previews (languages, certification, basic experience).",
+      "cta": "Start free",
       "features": {
-        "post": "Publier des offres illimitées",
-        "browse": "Parcourir les aperçus candidats",
-        "search": "Recherche et filtres de base",
-        "cv": "Accès complet au CV",
-        "chat": "Chat direct avec les candidats",
-        "audio": "Intros audio et évaluations"
+        "post": "Unlimited job listings",
+        "browse": "Candidate preview cards",
+        "search": "Basic search & filters",
+        "cv": "Full CV / PDF download",
+        "chat": "Direct chat & voice intro"
       }
     },
-    "premium": {
-      "name": "Premium",
-      "price": "€49",
-      "period": "/ mois",
-      "description": "Débloquez profils complets, chat et évaluations vérifiées.",
-      "cta": "Passer à Premium",
+    "starter": {
+      "name": "Starter",
+      "seasonPrice": "or €{price} season pass (Nov–Mar)",
+      "description": "Less than dinner out. Station bars, rental shops — subscribe just in case.",
+      "cta": "Choose Starter",
       "features": {
-        "post": "Publier des offres illimitées",
-        "browse": "Parcourir les aperçus candidats",
-        "search": "Recherche et filtres avancés",
-        "cv": "Accès complet au CV",
-        "chat": "Chat direct avec les candidats",
-        "audio": "Intros audio et évaluations"
+        "post": "Unlimited job listings",
+        "unlocks": "10 candidate unlocks/month (CV, voice, contact)",
+        "filters": "Language & sport modality filters",
+        "badge": "Basic listing badge"
+      }
+    },
+    "pro": {
+      "name": "Pro",
+      "seasonPrice": "or €{price} season pass (Nov–Mar)",
+      "description": "Under €80/month — all-you-can-eat CVs across Europe. Mid-size hotels & restaurants.",
+      "cta": "Choose Pro",
+      "features": {
+        "unlocks": "Unlimited candidate unlocks",
+        "emergency": "Emergency Radar (immediate availability)",
+        "couples": "Couples & double-room filter",
+        "chat": "Unlimited real-time chat"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "description": "International hotel chains, luxury resorts and mega ski schools.",
+      "cta": "Contact Enterprise",
+      "features": {
+        "allPro": "Everything in Pro, unlimited",
+        "featured": "3 featured job offers/month",
+        "verified": "Nevajobs-verified candidates filter",
+        "support": "Priority WhatsApp support",
+        "multiAccount": "Multi-account HR team access"
+      }
+    },
+    "comparison": {
+      "title": "Feature",
+      "candidate": "Candidate",
+      "starterUnlocks": "10/mo",
+      "unlimited": "Unlimited",
+      "featuredIncluded": "3/mo free",
+      "rows": {
+        "searchPost": "Search / post jobs",
+        "fullProfile": "Full profile / CV",
+        "voiceIntro": "Voice intro",
+        "emergencyRadar": "Emergency Radar",
+        "couplesFilter": "Couples / visa filter",
+        "featuredOffers": "Featured offers",
+        "verifiedFilter": "Verified candidates"
       }
     }
   },
   "footer": {
-    "copyright": "© {year} Nevajobs — Emplois hivernaux premium en Europe"
+    "copyright": "© {year} Nevajobs — Emploi professionnel de saison dans le secteur privé de la neige"
   },
   "pwa": {
     "title": "Installer Nevajobs",
@@ -158,9 +216,9 @@
   },
   "auth": {
     "loginTitle": "Bon retour",
-    "loginSubtitle": "Connectez-vous à votre compte Nevajobs",
+    "loginSubtitle": "Accédez à la plateforme professionnelle du secteur privé de la neige",
     "registerTitle": "Créez votre compte",
-    "registerSubtitle": "Candidats gratuits · Entreprises publient gratuitement",
+    "registerSubtitle": "Professionnels et employeurs sérieux du secteur de la neige. Inscription gratuite.",
     "email": "Email",
     "password": "Mot de passe",
     "fullName": "Nom complet",
@@ -185,24 +243,149 @@
       "popupClosed": "La fenêtre de connexion a été fermée.",
       "tooManyRequests": "Trop de tentatives. Réessayez plus tard.",
       "generic": "Une erreur s'est produite. Réessayez."
+    },
+    "testAccounts": "Comptes test : demo.candidato@nevajobs.test · demo.empresa@nevajobs.test — mot de passe Nevajobs2025!"
+  },
+  "profile": {
+    "setupTitle": "Complétez votre profil",
+    "setupCandidateSubtitle": "Indiquez ce que vous recherchez. Les profils sérieux obtiennent de meilleurs matchs.",
+    "setupCompanySubtitle": "Décrivez votre entreprise pour trouver les bons candidats.",
+    "saveError": "Impossible d'enregistrer le profil.",
+    "saveAndContinue": "Enregistrer et continuer",
+    "roleSought": "Poste recherché",
+    "roleSoughtPlaceholder": "Moniteur de ski, réceptionniste...",
+    "certification": "Certification (optionnel)",
+    "modality": "Modalité sportive",
+    "modalityAny": "Toute / non applicable",
+    "modalities": {
+      "ski": "Ski",
+      "snowboard": "Snowboard",
+      "both": "Ski & snowboard"
+    },
+    "currentResort": "Station actuelle ou préférée",
+    "languagesSpoken": "Langues parlées",
+    "immediateAvailability": "Disponibilité immédiate / déjà en station",
+    "alreadyInResort": "Je suis physiquement en station",
+    "euWorkPermit": "Autorisé à travailler UE / EEE / Suisse",
+    "companyDescription": "Description de l'entreprise",
+    "companyDescriptionPlaceholder": "École de ski privée, hôtel, magasin de location...",
+    "hiringCategories": "Catégories de recrutement",
+    "categories": {
+      "hoteles": "Hôtels & hôtellerie",
+      "escuelas": "Écoles de ski",
+      "alquiler": "Magasins & location",
+      "oficina": "Bureau & gestion"
+    },
+    "operatingResorts": "Stations d'activité",
+    "operatingResortsPlaceholder": "Zermatt, Chamonix, Val d'Isère",
+    "website": "Site web (optionnel)",
+    "editProfile": "Modifier le profil"
+  },
+  "dashboard": {
+    "titleCandidate": "Your candidate dashboard",
+    "titleCompany": "Your company dashboard",
+    "subtitleCandidate": "Matches are based on languages, work permit, role and availability.",
+    "subtitleCompany": "Publish jobs and see candidates who match your requirements.",
+    "yourProfile": "Your profile",
+    "companyProfile": "Company profile",
+    "roleSought": "Role sought",
+    "languages": "Languages",
+    "country": "Country",
+    "availability": "Availability",
+    "immediate": "Immediate",
+    "standard": "Standard",
+    "matchesForYou": "Jobs that match you",
+    "matchesForCompany": "Candidates that match your jobs",
+    "noMatchesCandidate": "No matching jobs yet. Complete your profile or check back when new offers are posted.",
+    "noMatchesCompany": "No matching candidates yet. Post a job or wait for new profiles.",
+    "applyMatch": "Apply — it's a match",
+    "applied": "Application sent",
+    "yourJobs": "Your job listings",
+    "postJob": "Post a job",
+    "publishJob": "Publish job",
+    "noJobsYet": "You haven't posted any jobs yet.",
+    "activeJobs": "Active listings",
+    "jobTitle": "Job title",
+    "resort": "Resort",
+    "requiredLanguages": "Required languages (comma-separated)",
+    "economicZone": "Economic zone",
+    "accommodationIncluded": "Accommodation included",
+    "couplesWelcome": "Couples welcome",
+    "forJob": "For job",
+    "currentPlan": "Current plan",
+    "unlocksRemaining": "Unlocks this month",
+    "unlimited": "Unlimited",
+    "creditsBalance": "Credits",
+    "upgradePlan": "Upgrade plan",
+    "buyCredits": "Buy credits",
+    "unlockCandidate": "Unlock candidate",
+    "unlockHint": "1 unlock = PDF CV, voice intro & chat",
+    "profileUnlocked": "Profile unlocked",
+    "certification": "Certification",
+    "contactEmail": "Email",
+    "downloadCv": "Download CV",
+    "openChat": "Open chat",
+    "candidateFilters": "Candidate filters",
+    "couplesFilter": "Couples only",
+    "verifiedFilter": "Nevajobs verified only",
+    "proRequired": "Requires Pro plan",
+    "enterpriseRequired": "Requires Enterprise plan",
+    "emergencyRadar": "Emergency Radar",
+    "emergencyRadarDesc": "Candidates with immediate availability physically in resort.",
+    "emergencyRadarLocked": "Available on Pro and Enterprise. Find replacements in hours, not days.",
+    "noEmergencyCandidates": "No in-resort candidates with immediate availability right now."
+  },
+  "match": {
+    "score": "{score}% match",
+    "reasons": {
+      "languagesFull": "Toutes les langues requises",
+      "languagesPartial": "Certaines langues requises",
+      "languagesMissing": "Langues manquantes",
+      "workPermitOk": "Permis de travail OK",
+      "workPermitMissing": "Permis de travail requis",
+      "categoryMatch": "Poste compatible",
+      "categoryMismatch": "Poste peut-être incompatible",
+      "modalityMatch": "Modalité sportive OK",
+      "stationMatch": "En station cible",
+      "immediateAvailability": "Disponibilité immédiate"
     }
   },
   "billing": {
-    "upgradeTitle": "Passer à Premium",
-    "upgradeSubtitle": "Débloquez les CV complets, le chat direct, les intros audio et les évaluations.",
-    "perMonth": "/ mois",
-    "billedMonthly": "Facturation mensuelle · Annulez à tout moment",
-    "checkout": "Continuer vers le paiement sécurisé",
-    "stripeNote": "Propulsé par Stripe · Vous serez redirigé pour payer",
-    "premiumCompaniesOnly": "Premium est réservé aux comptes entreprise.",
-    "checkoutError": "Impossible de démarrer le paiement.",
-    "genericError": "Une erreur s'est produite. Veuillez réessayer.",
-    "successTitle": "Bienvenue sur Premium",
-    "successSubtitle": "Votre abonnement est actif. Vous pouvez maintenant débloquer les profils complets, chatter directement et accéder aux intros audio.",
-    "backHome": "Retour à l'accueil",
-    "cancelTitle": "Paiement annulé",
-    "cancelSubtitle": "Aucun prélèvement n'a été effectué. Vous pouvez passer à Premium quand vous êtes prêt à recruter.",
-    "tryAgain": "Réessayer"
+    "choosePlan": "Choose your plan",
+    "choosePlanSubtitle": "Seasonal subscriptions Nov–Mar, pay-per-use credits, or start free.",
+    "plans": {
+      "starter": "Starter",
+      "pro": "Pro",
+      "enterprise": "Enterprise",
+      "credits": "Credits"
+    },
+    "monthly": "Monthly",
+    "seasonPass": "Season pass",
+    "perMonth": "/ month",
+    "perMonthShort": "/mo",
+    "seasonTotal": " season total",
+    "seasonBilling": "One-time payment for Nov–Mar season",
+    "perCredit": "/ credit",
+    "creditQuantity": "Number of credits",
+    "creditsLabel": "credits",
+    "currentPlan": "Current plan",
+    "comparePlans": "Compare all plans",
+    "launchPromo": "November: first month Pro free — unlimited unlocks & Emergency Radar",
+    "companiesOnly": "Plans are only available for company accounts.",
+    "checkout": "Continue to secure checkout",
+    "stripeNote": "Powered by Stripe · You'll be redirected to complete payment",
+    "checkoutError": "Could not start checkout.",
+    "genericError": "Something went wrong. Please try again.",
+    "upgradeTitle": "Choose your plan",
+    "upgradeSubtitle": "Unlock CVs, voice intros, chat and the Emergency Radar.",
+    "billedMonthly": "Billed monthly during winter season · Cancel anytime",
+    "premiumCompaniesOnly": "Plans are only available for company accounts.",
+    "successTitle": "Welcome aboard",
+    "successSubtitle": "Your plan is active. Head to your dashboard to publish jobs and match candidates.",
+    "backHome": "Back to homepage",
+    "cancelTitle": "Checkout cancelled",
+    "cancelSubtitle": "No charges were made. You can choose a plan whenever you're ready.",
+    "tryAgain": "Try again"
   },
   "locales": {
     "en": "English",

@@ -59,10 +59,18 @@ service cloud.firestore {
       return estado in ['pendiente', 'vista', 'contactada', 'rechazada', 'contratada'];
     }
 
-    // El cliente no puede auto-ascender a Premium ni modificar créditos
+    // El cliente no puede auto-ascender a Premium ni modificar créditos/plan
     function premiumFieldsUnchanged() {
       return request.resource.data.es_premium == resource.data.es_premium
-             && request.resource.data.creditos_disponibles == resource.data.creditos_disponibles;
+             && request.resource.data.creditos_disponibles == resource.data.creditos_disponibles
+             && (!('plan_empresa' in request.resource.data)
+                 || request.resource.data.plan_empresa == resource.data.plan_empresa)
+             && (!('desbloqueos_mes_usados' in request.resource.data)
+                 || request.resource.data.desbloqueos_mes_usados == resource.data.desbloqueos_mes_usados)
+             && (!('desbloqueos_mes_reset_mes' in request.resource.data)
+                 || request.resource.data.desbloqueos_mes_reset_mes == resource.data.desbloqueos_mes_reset_mes)
+             && (!('ofertas_destacadas_mes_usadas' in request.resource.data)
+                 || request.resource.data.ofertas_destacadas_mes_usadas == resource.data.ofertas_destacadas_mes_usadas);
     }
 
     function isValidUsuarioCreate() {
@@ -74,7 +82,11 @@ service cloud.firestore {
              && request.resource.data.valoracion_media == 0
              && request.resource.data.disponibilidad_inmediata is bool
              && request.resource.data.permiso_trabajo_ue is bool
-             && request.resource.data.idiomas_hablados is list;
+             && request.resource.data.idiomas_hablados is list
+             && (!('perfil_completo' in request.resource.data)
+                 || request.resource.data.perfil_completo == false)
+             && (!('plan_empresa' in request.resource.data)
+                 || request.resource.data.plan_empresa == 'gratis');
     }
 
     function isValidUsuarioUpdate() {
@@ -128,6 +140,15 @@ service cloud.firestore {
 
       allow delete: if isEmpresa()
                     && resource.data.empresa_id == request.auth.uid;
+    }
+
+    // =========================================================================
+    // desbloqueos/{desbloqueoId}
+    // Escritura solo vía API (Admin SDK)
+    // =========================================================================
+    match /desbloqueos/{desbloqueoId} {
+      allow read: if isEmpresa() && resource.data.empresa_id == request.auth.uid;
+      allow write: if false;
     }
 
     // =========================================================================
