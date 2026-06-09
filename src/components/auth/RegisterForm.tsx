@@ -9,6 +9,7 @@ import {
   loginWithGoogle,
   registerWithEmail,
 } from "@/lib/auth/auth-service";
+import { GoogleLogo } from "@/components/ui/GoogleLogo";
 import type { RolUsuario } from "@/types";
 
 export function RegisterForm({
@@ -149,8 +150,9 @@ export function RegisterForm({
         type="button"
         onClick={handleGoogle}
         disabled={loading}
-        className="w-full rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-sky-50 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-sky-50 disabled:opacity-60"
       >
+        <GoogleLogo />
         {t("google")}
       </button>
 
