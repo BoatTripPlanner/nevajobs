@@ -82,13 +82,13 @@ export function RegisterForm({
       <h1 className="text-2xl font-bold text-slate-900">{t("registerTitle")}</h1>
       <p className="mt-2 text-sm text-slate-600">{t("registerSubtitle")}</p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-        {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
-        )}
+      {error && (
+        <p className="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
+      <div className={`space-y-4 ${error ? "mt-4" : "mt-8"}`}>
         <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
           <RoleButton active={rol === "candidato"} onClick={() => setRol("candidato")}>
             {t("candidate")}
@@ -98,6 +98,24 @@ export function RegisterForm({
           </RoleButton>
         </div>
 
+        <button
+          type="button"
+          onClick={handleGoogle}
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-sky-50 disabled:opacity-60"
+        >
+          <GoogleLogo />
+          {t("google")}
+        </button>
+      </div>
+
+      <div className="my-6 flex items-center gap-3">
+        <div className="h-px flex-1 bg-slate-200" />
+        <span className="text-xs text-slate-400">{t("or")}</span>
+        <div className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Field label={t("fullName")} value={nombre} onChange={setNombre} required />
         <Field label={t("email")} type="email" value={email} onChange={setEmail} required />
         <Field
@@ -139,22 +157,6 @@ export function RegisterForm({
           {t("createAccount")}
         </button>
       </form>
-
-      <div className="my-6 flex items-center gap-3">
-        <div className="h-px flex-1 bg-slate-200" />
-        <span className="text-xs text-slate-400">{t("or")}</span>
-        <div className="h-px flex-1 bg-slate-200" />
-      </div>
-
-      <button
-        type="button"
-        onClick={handleGoogle}
-        disabled={loading}
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-sky-50 disabled:opacity-60"
-      >
-        <GoogleLogo />
-        {t("google")}
-      </button>
 
       <p className="mt-6 text-center text-sm text-slate-600">
         {t("hasAccount")}{" "}
