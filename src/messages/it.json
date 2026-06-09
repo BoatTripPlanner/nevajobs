@@ -110,6 +110,20 @@
       "office": "Ufficio e gestione"
     }
   },
+  "jobDetail": {
+    "backToJobs": "Torna alle offerte",
+    "description": "Descrizione del lavoro",
+    "accommodation": "Dettagli alloggio",
+    "applyCta": "Registrati per candidarti",
+    "browseMore": "Vedi altre offerte",
+    "notFound": "Offerta non trovata"
+  },
+  "employersCandidates": {
+    "title": "Feed candidati disponibili",
+    "subtitle": "Anteprima per aziende — registrati per profili completi, sblocco CV e contatto candidati.",
+    "cta": "Registrati come azienda",
+    "ctaLoggedIn": "Vai al pannello azienda"
+  },
   "candidates": {
     "emergencyBadge": "Interruttore emergenza",
     "title": "Candidati disponibili ora",

@@ -110,6 +110,20 @@
       "office": "Bureau et gestion"
     }
   },
+  "jobDetail": {
+    "backToJobs": "Retour aux offres",
+    "description": "Description du poste",
+    "accommodation": "Détails du logement",
+    "applyCta": "S'inscrire pour postuler",
+    "browseMore": "Voir plus d'offres",
+    "notFound": "Offre introuvable"
+  },
+  "employersCandidates": {
+    "title": "Flux de candidats disponibles",
+    "subtitle": "Aperçu pour employeurs — inscrivez-vous pour voir les profils complets, débloquer les CV et contacter les candidats.",
+    "cta": "S'inscrire comme employeur",
+    "ctaLoggedIn": "Aller au tableau de bord"
+  },
   "candidates": {
     "emergencyBadge": "Interrupteur d'urgence",
     "title": "Candidats disponibles maintenant",

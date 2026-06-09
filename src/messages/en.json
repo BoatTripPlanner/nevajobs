@@ -112,6 +112,20 @@
       "office": "Office & Management"
     }
   },
+  "jobDetail": {
+    "backToJobs": "Back to jobs",
+    "description": "Job description",
+    "accommodation": "Accommodation details",
+    "applyCta": "Register to apply",
+    "browseMore": "Browse more jobs",
+    "notFound": "Job not found"
+  },
+  "employersCandidates": {
+    "title": "Available candidates feed",
+    "subtitle": "Preview for employers — register to see full profiles, unlock CVs and contact candidates.",
+    "cta": "Register as a company",
+    "ctaLoggedIn": "Go to company dashboard"
+  },
   "candidates": {
     "emergencyBadge": "Emergency switch",
     "title": "Available candidates now",

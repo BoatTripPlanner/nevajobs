@@ -110,6 +110,20 @@
       "office": "Büro & Verwaltung"
     }
   },
+  "jobDetail": {
+    "backToJobs": "Zurück zu Jobs",
+    "description": "Stellenbeschreibung",
+    "accommodation": "Unterkunftsdetails",
+    "applyCta": "Registrieren zum Bewerben",
+    "browseMore": "Weitere Jobs ansehen",
+    "notFound": "Stelle nicht gefunden"
+  },
+  "employersCandidates": {
+    "title": "Verfügbare Kandidaten",
+    "subtitle": "Vorschau für Arbeitgeber — registrieren Sie sich für vollständige Profile, CV-Freischaltung und Kontakt.",
+    "cta": "Als Unternehmen registrieren",
+    "ctaLoggedIn": "Zum Unternehmens-Dashboard"
+  },
   "candidates": {
     "emergencyBadge": "Notfall-Schalter",
     "title": "Jetzt verfügbare Kandidaten",

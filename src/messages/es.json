@@ -112,6 +112,20 @@
       "office": "Oficina y gestión"
     }
   },
+  "jobDetail": {
+    "backToJobs": "Volver a ofertas",
+    "description": "Descripción del puesto",
+    "accommodation": "Detalles de alojamiento",
+    "applyCta": "Registrarse para aplicar",
+    "browseMore": "Ver más ofertas",
+    "notFound": "Oferta no encontrada"
+  },
+  "employersCandidates": {
+    "title": "Feed de candidatos disponibles",
+    "subtitle": "Vista previa para empresas — regístrate para ver perfiles completos, desbloquear CVs y contactar candidatos.",
+    "cta": "Registrarse como empresa",
+    "ctaLoggedIn": "Ir al panel de empresa"
+  },
   "candidates": {
     "emergencyBadge": "Interruptor de emergencia",
     "title": "Candidatos disponibles ahora",
