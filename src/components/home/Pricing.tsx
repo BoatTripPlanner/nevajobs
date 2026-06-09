@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, Coins, Minus, Sparkles, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { TrustBadges } from "@/components/trust/TrustBadges";
+import { useVisitorBilling } from "@/hooks/useVisitorBilling";
 import {
   currencyFromZona,
   formatMoney,
@@ -43,7 +44,13 @@ const ZONA_OPTIONS: ZonaEconomica[] = ["UE", "Suiza", "Andorra"];
 export function Pricing() {
   const t = useTranslations("pricing");
   const locale = useLocale();
-  const [zona, setZona] = useState<ZonaEconomica>("UE");
+  const visitor = useVisitorBilling();
+  const [zona, setZona] = useState<ZonaEconomica>(visitor.zona);
+
+  useEffect(() => {
+    setZona(visitor.zona);
+  }, [visitor.zona, locale]);
+
   const currency = currencyFromZona(zona);
   const prices = getPlanPrices(currency);
   const showPromo = isLaunchPromoActive();

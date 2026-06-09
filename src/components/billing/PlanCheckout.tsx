@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { ScrollLink } from "@/components/scroll/ScrollLink";
 import { Coins, Crown, Loader2, Sparkles } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useVisitorBilling } from "@/hooks/useVisitorBilling";
 import { TrustBadges } from "@/components/trust/TrustBadges";
 import {
   formatMoney,
@@ -91,7 +92,10 @@ export function PlanCheckout() {
     }
   }
 
-  const currency = getUserBillingCurrency(profile);
+  const visitor = useVisitorBilling();
+  const currency = profile
+    ? getUserBillingCurrency(profile)
+    : visitor.currency;
   const prices = getPlanPrices(currency);
 
   if (loading || !user) {
