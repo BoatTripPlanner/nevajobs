@@ -1,11 +1,10 @@
 /**
  * Push environment variables to Vercel (production, preview, development).
- * Run once after linking: node scripts/setup-vercel-env.mjs
+ * Run: npm run setup:vercel-env
  */
 
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { randomUUID } from "node:crypto";
 import { execSync } from "node:child_process";
 
 function parseEnvFile(path) {
@@ -24,7 +23,8 @@ function parseEnvFile(path) {
 function addEnv(name, value, environments = ["production", "preview", "development"]) {
   for (const env of environments) {
     try {
-      execSync(`vercel env add ${name} ${env} --force`, {
+      // --yes avoids interactive git-branch prompts on preview envs
+      execSync(`npx vercel env add ${name} ${env} --force --yes`, {
         input: value,
         stdio: ["pipe", "inherit", "inherit"],
         shell: true,
@@ -47,15 +47,28 @@ if (!existsSync(saPath)) {
 
 const serviceAccount = readFileSync(saPath, "utf8");
 
-console.log("→ Pushing env vars to Vercel...\n");
+console.log("→ Pushing env vars to Vercel (production, preview, development)...\n");
 
-for (const [key, value] of Object.entries(localEnv)) {
-  if (key.startsWith("NEXT_PUBLIC_") || key.startsWith("STRIPE_")) {
-    addEnv(key, value);
-  }
+const keysFromLocal = Object.keys(localEnv).filter(
+  (key) =>
+    key.startsWith("NEXT_PUBLIC_") ||
+    key.startsWith("STRIPE_") ||
+    key === "NEVAJOBS_CREATOR_EMAIL" ||
+    key === "CRON_SECRET",
+);
+
+for (const key of keysFromLocal) {
+  addEnv(key, localEnv[key]);
 }
 
 addEnv("FIREBASE_SERVICE_ACCOUNT", serviceAccount);
-addEnv("CRON_SECRET", randomUUID());
 
-console.log("\n✓ Done. Redeploy with: vercel --prod");
+if (!localEnv.NEVAJOBS_CREATOR_EMAIL) {
+  addEnv("NEVAJOBS_CREATOR_EMAIL", "alemv.mlg@gmail.com");
+}
+
+if (!localEnv.CRON_SECRET) {
+  console.log("\n  ℹ CRON_SECRET not in .env.local — left unchanged on Vercel");
+}
+
+console.log("\n✓ Done. Redeploy with: npx vercel --prod");

@@ -13,7 +13,8 @@
     "seed:creator": "node scripts/seed-creator.mjs",
     "stats:recalculate": "node scripts/recalculate-stats.mjs",
     "setup:stripe": "node scripts/setup-stripe.mjs",
-    "setup:stripe-plans": "node scripts/setup-stripe-plans.mjs"
+    "setup:stripe-plans": "node scripts/setup-stripe-plans.mjs",
+    "setup:vercel-env": "node scripts/setup-vercel-env.mjs"
   },
   "dependencies": {
     "firebase": "^12.14.0",
