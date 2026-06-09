@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // -------------------------------------------------------------------------
+    // CVs — acceso estrictamente privado
+    // Ruta obligatoria: cvs/{userId}/{fileName}
+    //   • Lectura: solo el candidato dueño (userId) O empresa autenticada premium
+    //   • Escritura: solo el candidato dueño de la carpeta
+    // Los PDFs NO deben ser públicos ni usar tokens de acceso permanentes.
+    // -------------------------------------------------------------------------
+    match /cvs/{userId}/{fileName} {
+      allow read: if request.auth != null
+                  && (
+                    request.auth.uid == userId
+                    || isEmpresaPremium()
+                  );
+
+      allow create, update: if request.auth != null
+                            && request.auth.uid == userId
+                            && isValidCvUpload();
+
+      allow delete: if request.auth != null
+                    && request.auth.uid == userId;
+    }
+
+    // Denegar todo lo demás por defecto
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
+// Empresa con rol 'empresa' y es_premium === true (documento en Firestore usuarios)
+function isEmpresaPremium() {
+  return request.auth != null
+         && firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data.rol == 'empresa'
+         && firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data.es_premium == true;
+}
+
+// Validaciones al subir un CV
+function isValidCvUpload() {
+  return request.resource.size < 5 * 1024 * 1024          // máx. 5 MB
+         && request.resource.contentType == 'application/pdf';
+}

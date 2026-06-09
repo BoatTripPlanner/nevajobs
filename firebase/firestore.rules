@@ -1,0 +1,247 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // HELPERS
+    // =========================================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function userDoc(uid) {
+      return get(/databases/$(database)/documents/usuarios/$(uid)).data;
+    }
+
+    function currentUser() {
+      return userDoc(request.auth.uid);
+    }
+
+    function userExists(uid) {
+      return exists(/databases/$(database)/documents/usuarios/$(uid));
+    }
+
+    function isCandidato() {
+      return isAuthenticated()
+             && userExists(request.auth.uid)
+             && currentUser().rol == 'candidato';
+    }
+
+    function isEmpresa() {
+      return isAuthenticated()
+             && userExists(request.auth.uid)
+             && currentUser().rol == 'empresa';
+    }
+
+    function isEmpresaPremium() {
+      return isEmpresa() && currentUser().es_premium == true;
+    }
+
+    function isValidRol(rol) {
+      return rol == 'candidato' || rol == 'empresa';
+    }
+
+    function isValidCategoria(categoria) {
+      return categoria in ['hoteles', 'escuelas', 'alquiler', 'oficina'];
+    }
+
+    function isValidZona(zona) {
+      return zona in ['UE', 'Suiza', 'Andorra'];
+    }
+
+    function isValidEstadoPostulacion(estado) {
+      return estado in ['pendiente', 'vista', 'contactada', 'rechazada', 'contratada'];
+    }
+
+    // El cliente no puede auto-ascender a Premium ni modificar créditos
+    function premiumFieldsUnchanged() {
+      return request.resource.data.es_premium == resource.data.es_premium
+             && request.resource.data.creditos_disponibles == resource.data.creditos_disponibles;
+    }
+
+    function isValidUsuarioCreate() {
+      return request.resource.data.uid == request.auth.uid
+             && request.resource.data.email == request.auth.token.email
+             && isValidRol(request.resource.data.rol)
+             && request.resource.data.es_premium == false
+             && request.resource.data.creditos_disponibles == 0
+             && request.resource.data.valoracion_media == 0
+             && request.resource.data.disponibilidad_inmediata is bool
+             && request.resource.data.permiso_trabajo_ue is bool
+             && request.resource.data.idiomas_hablados is list;
+    }
+
+    function isValidUsuarioUpdate() {
+      return request.resource.data.uid == resource.data.uid
+             && request.resource.data.email == resource.data.email
+             && request.resource.data.rol == resource.data.rol
+             && premiumFieldsUnchanged();
+    }
+
+    // =========================================================================
+    // usuarios/{uid}
+    // =========================================================================
+    match /usuarios/{userId} {
+
+      // Lectura:
+      //   • Propio perfil → completo
+      //   • Perfiles candidato → empresas autenticadas (feed / búsqueda)
+      //   • Los CVs reales siguen protegidos en Storage (/cvs/{uid}/...)
+      allow read: if isOwner(userId)
+                  || (isEmpresa() && resource.data.rol == 'candidato');
+
+      allow create: if isOwner(userId) && isValidUsuarioCreate();
+
+      allow update: if isOwner(userId) && isValidUsuarioUpdate();
+
+      allow delete: if false;
+    }
+
+    // =========================================================================
+    // ofertas/{ofertaId}
+    // =========================================================================
+    match /ofertas/{ofertaId} {
+
+      // Ofertas activas visibles para todos (homepage / buscador público)
+      allow read: if resource.data.activa == true
+                  || (isEmpresa() && resource.data.empresa_id == request.auth.uid);
+
+      // Solo la empresa dueña crea ofertas
+      allow create: if isEmpresa()
+                    && request.resource.data.empresa_id == request.auth.uid
+                    && request.resource.data.activa is bool
+                    && isValidCategoria(request.resource.data.categoria)
+                    && isValidZona(request.resource.data.zona_economica)
+                    && request.resource.data.idiomas_requeridos is list
+                    && request.resource.data.incluye_alojamiento is bool
+                    && request.resource.data.acepta_parejas is bool;
+
+      allow update: if isEmpresa()
+                    && resource.data.empresa_id == request.auth.uid
+                    && request.resource.data.empresa_id == resource.data.empresa_id;
+
+      allow delete: if isEmpresa()
+                    && resource.data.empresa_id == request.auth.uid;
+    }
+
+    // =========================================================================
+    // postulaciones/{postulacionId}
+    // =========================================================================
+    match /postulaciones/{postulacionId} {
+
+      allow read: if isAuthenticated()
+                  && (
+                    resource.data.candidato_id == request.auth.uid
+                    || resource.data.empresa_id == request.auth.uid
+                  );
+
+      // Solo candidatos postulan a ofertas activas
+      allow create: if isCandidato()
+                    && request.resource.data.candidato_id == request.auth.uid
+                    && request.resource.data.estado == 'pendiente'
+                    && isValidEstadoPostulacion(request.resource.data.estado)
+                    && get(/databases/$(database)/documents/ofertas/$(request.resource.data.oferta_id)).data.activa == true
+                    && get(/databases/$(database)/documents/ofertas/$(request.resource.data.oferta_id)).data.empresa_id
+                       == request.resource.data.empresa_id;
+
+      // Empresa actualiza estado; desbloqueo premium solo si es premium
+      allow update: if isAuthenticated()
+                    && (
+                      (resource.data.candidato_id == request.auth.uid
+                       && request.resource.data.candidato_id == resource.data.candidato_id
+                       && request.resource.data.estado == resource.data.estado
+                       && request.resource.data.perfil_desbloqueado == resource.data.perfil_desbloqueado)
+                      ||
+                      (resource.data.empresa_id == request.auth.uid
+                       && request.resource.data.candidato_id == resource.data.candidato_id
+                       && request.resource.data.empresa_id == resource.data.empresa_id
+                       && isValidEstadoPostulacion(request.resource.data.estado)
+                       && (
+                         request.resource.data.perfil_desbloqueado == resource.data.perfil_desbloqueado
+                         || (isEmpresaPremium() && request.resource.data.perfil_desbloqueado == true)
+                       ))
+                    );
+
+      allow delete: if false;
+    }
+
+    // =========================================================================
+    // chats/{chatId}
+    // Subcolección: chats/{chatId}/mensajes/{mensajeId}
+    // =========================================================================
+    match /chats/{chatId} {
+
+      function isChatParticipant() {
+        return isAuthenticated()
+               && request.auth.uid in resource.data.participantes;
+      }
+
+      function willBeChatParticipant() {
+        return isAuthenticated()
+               && request.auth.uid in request.resource.data.participantes;
+      }
+
+      // Chat solo accesible para participantes; crear requiere Premium (empresa)
+      allow read: if isChatParticipant();
+
+      allow create: if willBeChatParticipant()
+                    && request.resource.data.participantes.size() == 2
+                    && isEmpresaPremium()
+                    && exists(/databases/$(database)/documents/postulaciones/$(request.resource.data.postulacion_id))
+                    && get(/databases/$(database)/documents/postulaciones/$(request.resource.data.postulacion_id)).data.perfil_desbloqueado == true;
+
+      allow update: if isChatParticipant()
+                    && request.resource.data.participantes == resource.data.participantes;
+
+      allow delete: if false;
+
+      match /mensajes/{mensajeId} {
+
+        function parentChat() {
+          return get(/databases/$(database)/documents/chats/$(chatId)).data;
+        }
+
+        function isParentParticipant() {
+          return isAuthenticated()
+                 && request.auth.uid in parentChat().participantes;
+        }
+
+        allow read: if isParentParticipant();
+
+        allow create: if isParentParticipant()
+                      && request.resource.data.remitente_id == request.auth.uid
+                      && request.resource.data.chat_id == chatId
+                      && request.resource.data.texto is string
+                      && request.resource.data.texto.size() > 0
+                      && request.resource.data.texto.size() <= 2000
+                      && request.resource.data.leido == false;
+
+        allow update: if isParentParticipant()
+                      && request.resource.data.remitente_id == resource.data.remitente_id
+                      && request.resource.data.texto == resource.data.texto;
+
+        allow delete: if false;
+      }
+    }
+
+    // =========================================================================
+    // estadisticas_en_vivo/{docId}
+    // Escritura solo vía Cloud Functions / Admin SDK (no cliente)
+    // =========================================================================
+    match /estadisticas_en_vivo/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Denegar cualquier otra ruta
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
