@@ -8,67 +8,106 @@ const localeToCountry: Record<string, string> = {
   it: "it",
 };
 
-/** Inline SVG flags — render consistently on Windows (emoji flags often show as "GB", "ES", etc.). */
-const flags: Record<string, ReactNode> = {
-  gb: (
-    <svg viewBox="0 0 60 30" className="h-3.5 w-5 shrink-0 rounded-sm shadow-sm ring-1 ring-black/10" aria-hidden>
-      <rect fill="#012169" width="60" height="30" />
-      <path stroke="#fff" strokeWidth="6" d="M0 0l60 30M60 0L0 30" />
-      <path stroke="#C8102E" strokeWidth="4" d="M0 0l60 30M60 0L0 30" />
-      <path stroke="#fff" strokeWidth="10" d="M30 0v30M0 15h60" />
-      <path stroke="#C8102E" strokeWidth="6" d="M30 0v30M0 15h60" />
+function FlagSvg({
+  viewBox,
+  children,
+}: {
+  viewBox: string;
+  children: ReactNode;
+}) {
+  return (
+    <svg
+      viewBox={viewBox}
+      className="block size-full"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden
+    >
+      {children}
     </svg>
-  ),
-  es: (
-    <svg viewBox="0 0 60 40" className="h-3.5 w-5 shrink-0 rounded-sm shadow-sm ring-1 ring-black/10" aria-hidden>
-      <path fill="#AA151B" d="M0 0h60v10H0zm0 10h60v20H0zm0 20h60v10H0z" />
-      <path fill="#F1BF00" d="M0 10h60v20H0z" />
-    </svg>
-  ),
-  fr: (
-    <svg viewBox="0 0 60 40" className="h-3.5 w-5 shrink-0 rounded-sm shadow-sm ring-1 ring-black/10" aria-hidden>
-      <path fill="#002395" d="M0 0h20v40H0z" />
-      <path fill="#fff" d="M20 0h20v40H20z" />
-      <path fill="#ED2939" d="M40 0h20v40H40z" />
-    </svg>
-  ),
-  de: (
-    <svg viewBox="0 0 60 40" className="h-3.5 w-5 shrink-0 rounded-sm shadow-sm ring-1 ring-black/10" aria-hidden>
-      <path fill="#000" d="M0 0h60v13.3H0z" />
-      <path fill="#DD0000" d="M0 13.3h60v13.4H0z" />
-      <path fill="#FFCE00" d="M0 26.7h60V40H0z" />
-    </svg>
-  ),
-  it: (
-    <svg viewBox="0 0 60 40" className="h-3.5 w-5 shrink-0 rounded-sm shadow-sm ring-1 ring-black/10" aria-hidden>
-      <path fill="#009246" d="M0 0h20v40H0z" />
-      <path fill="#fff" d="M20 0h20v40H20z" />
-      <path fill="#CE2B37" d="M40 0h20v40H40z" />
-    </svg>
-  ),
+  );
+}
+
+const flagContent: Record<string, { viewBox: string; node: ReactNode }> = {
+  gb: {
+    viewBox: "0 0 60 30",
+    node: (
+      <>
+        <rect fill="#012169" width="60" height="30" />
+        <path stroke="#fff" strokeWidth="6" d="M0 0l60 30M60 0L0 30" />
+        <path stroke="#C8102E" strokeWidth="4" d="M0 0l60 30M60 0L0 30" />
+        <path stroke="#fff" strokeWidth="10" d="M30 0v30M0 15h60" />
+        <path stroke="#C8102E" strokeWidth="6" d="M30 0v30M0 15h60" />
+      </>
+    ),
+  },
+  es: {
+    viewBox: "0 0 60 40",
+    node: (
+      <>
+        <rect fill="#AA151B" width="60" height="40" />
+        <rect fill="#F1BF00" y="10" width="60" height="20" />
+      </>
+    ),
+  },
+  fr: {
+    viewBox: "0 0 60 40",
+    node: (
+      <>
+        <rect fill="#002395" width="20" height="40" />
+        <rect fill="#fff" x="20" width="20" height="40" />
+        <rect fill="#ED2939" x="40" width="20" height="40" />
+      </>
+    ),
+  },
+  de: {
+    viewBox: "0 0 60 40",
+    node: (
+      <>
+        <rect fill="#000" width="60" height="13.34" />
+        <rect fill="#DD0000" y="13.34" width="60" height="13.33" />
+        <rect fill="#FFCE00" y="26.67" width="60" height="13.33" />
+      </>
+    ),
+  },
+  it: {
+    viewBox: "0 0 60 40",
+    node: (
+      <>
+        <rect fill="#009246" width="20" height="40" />
+        <rect fill="#fff" x="20" width="20" height="40" />
+        <rect fill="#CE2B37" x="40" width="20" height="40" />
+      </>
+    ),
+  },
 };
 
 export function LocaleFlag({
   locale,
-  className,
+  className = "h-5 w-7 sm:h-4 sm:w-6",
 }: {
   locale: string;
   className?: string;
 }) {
   const country = localeToCountry[locale] ?? locale;
-  const flag = flags[country];
+  const flag = flagContent[country];
 
   if (!flag) {
     return (
       <span
-        className={`inline-flex h-3.5 w-5 items-center justify-center rounded-sm bg-slate-200 text-[8px] font-bold uppercase text-slate-600 ${className ?? ""}`}
+        className={`inline-flex items-center justify-center overflow-hidden rounded-[3px] bg-slate-200 text-[9px] font-bold uppercase text-slate-600 ring-1 ring-black/10 ${className}`}
       >
         {locale.slice(0, 2)}
       </span>
     );
   }
 
-  return <span className={`inline-flex ${className ?? ""}`}>{flag}</span>;
+  return (
+    <span
+      className={`inline-flex shrink-0 overflow-hidden rounded-[3px] shadow-sm ring-1 ring-black/10 ${className}`}
+    >
+      <FlagSvg viewBox={flag.viewBox}>{flag.node}</FlagSvg>
+    </span>
+  );
 }
 
 export function localeCountryCode(locale: string): string {

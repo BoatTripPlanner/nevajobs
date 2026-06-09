@@ -61,11 +61,11 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setLangOpen((open) => !open)}
-              className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-sky-50 sm:min-h-0 sm:min-w-0 sm:px-3"
+              className="flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-sm text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-sky-50 sm:min-h-0 sm:px-3"
               aria-expanded={langOpen}
               aria-haspopup="listbox"
             >
-              <LocaleFlag locale={locale} />
+              <LocaleFlag locale={locale} className="h-[18px] w-[26px] sm:h-4 sm:w-6" />
               <span className="hidden sm:inline">{tLocales(locale)}</span>
               <ChevronDown className="h-4 w-4 text-slate-400" />
             </button>
@@ -84,7 +84,7 @@ export function Navbar() {
                       onClick={() => switchLocale(item.code)}
                       className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-slate-700 transition hover:bg-sky-50 hover:text-cyan-700"
                     >
-                      <LocaleFlag locale={item.code} />
+                      <LocaleFlag locale={item.code} className="h-4 w-6" />
                       {tLocales(item.code)}
                     </button>
                   </li>
