@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "login": "Login",
+    "register": "Register",
+    "signOut": "Sign out",
+    "goPremium": "Go Premium",
+    "premium": "Premium"
+  },
+  "hero": {
+    "badge": "Private snow sector · Europe",
+    "titleBefore": "Find your next",
+    "titleHighlight": "winter season job",
+    "titleAfter": "in Europe",
+    "subtitle": "The premium job portal for hotels, private ski schools, rental shops and resort offices across the Alps & Pyrenees. Built for cross-border talent — candidates join free, employers hire smarter."
+  },
+  "stats": {
+    "live": "Live Stats",
+    "activeJobs": "Active jobs in the Alps & Pyrenees",
+    "availableCandidates": "Available candidates",
+    "topCountries": "Top countries hiring"
+  },
+  "search": {
+    "title": "Advanced job search",
+    "country": "Country",
+    "resort": "Ski resort",
+    "category": "Private category",
+    "language": "Required language",
+    "modality": "Sport modality",
+    "accommodation": "🏠 Accommodation included",
+    "couples": "🏠 Double accommodation / Couples welcome",
+    "submit": "Search jobs"
+  },
+  "filters": {
+    "allCountries": "All countries",
+    "allResorts": "All resorts",
+    "allCategories": "All categories",
+    "anyLanguage": "Any language",
+    "anyModality": "Any modality",
+    "countries": {
+      "switzerland": "Switzerland",
+      "france": "France",
+      "austria": "Austria",
+      "italy": "Italy",
+      "spain": "Spain",
+      "andorra": "Andorra",
+      "germany": "Germany"
+    },
+    "resorts": {
+      "zermatt": "Zermatt",
+      "chamonix": "Chamonix",
+      "verbier": "Verbier",
+      "sierra-nevada": "Sierra Nevada",
+      "st-anton": "St. Anton",
+      "cortina": "Cortina d'Ampezzo",
+      "val-disere": "Val d'Isère"
+    },
+    "categories": {
+      "hotels": "Hotels & Hospitality",
+      "schools": "Ski Schools & Clubs",
+      "rental": "Shops & Equipment Rental",
+      "office": "Office & Local Management"
+    },
+    "languages": {
+      "en": "English",
+      "fr": "French",
+      "de": "German",
+      "es": "Spanish",
+      "it": "Italian"
+    },
+    "modalities": {
+      "ski": "Ski",
+      "snowboard": "Snowboard",
+      "both": "Ski & Snowboard"
+    }
+  },
+  "jobs": {
+    "title": "Latest opportunities",
+    "subtitle": "Private-sector roles across Europe's top ski destinations",
+    "viewAll": "View all jobs →",
+    "emptyTitle": "No active jobs match your search.",
+    "emptySubtitle": "Check back soon — new roles are posted daily.",
+    "viewDetails": "View details",
+    "certificationRequired": "Certification required",
+    "accommodationBadge": "🏠 Accommodation Included",
+    "couplesBadge": "🏠 Double Accommodation / Couples Welcome",
+    "categories": {
+      "hotels": "Hotels & Hospitality",
+      "schools": "Ski Schools & Clubs",
+      "rental": "Shops & Rental",
+      "office": "Office & Management"
+    }
+  },
+  "candidates": {
+    "emergencyBadge": "Emergency switch",
+    "title": "Available candidates now",
+    "subtitle": "Employer feed — mid-season drop-outs and talent already in resort, ready to start immediately.",
+    "viewAll": "View full feed →",
+    "emptyTitle": "No candidates with immediate availability right now.",
+    "emptySubtitle": "Candidates who enable the emergency switch appear here automatically.",
+    "immediateInResort": "Immediate availability · In resort",
+    "immediate": "Immediate availability",
+    "contact": "Contact candidate",
+    "flexibleLocation": "Flexible location",
+    "seasonalWorker": "Seasonal worker"
+  },
+  "voice": {
+    "title": "Voice Intro ({seconds}s)",
+    "subtitle": "Language passport · verify fluency before contact",
+    "play": "Play voice intro",
+    "pause": "Pause voice intro"
+  },
+  "pricing": {
+    "title": "Simple pricing for employers",
+    "subtitle": "Candidates always join for free. Companies publish for free — unlock premium tools when you're ready to hire.",
+    "footnote": "Seasonal billing available · Cancel anytime · Candidates never pay",
+    "mostPopular": "Most popular",
+    "free": {
+      "name": "Free",
+      "price": "€0",
+      "period": "/ forever",
+      "description": "List jobs and reach seasonal talent across Europe.",
+      "cta": "Start posting free",
+      "features": {
+        "post": "Post unlimited job listings",
+        "browse": "Browse candidate previews",
+        "search": "Basic search & filters",
+        "cv": "Full candidate CV access",
+        "chat": "Direct chat with candidates",
+        "audio": "Audio introductions & ratings"
+      }
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€49",
+      "period": "/ month",
+      "description": "Unlock full profiles, chat and verified ratings.",
+      "cta": "Upgrade to Premium",
+      "features": {
+        "post": "Post unlimited job listings",
+        "browse": "Browse candidate previews",
+        "search": "Advanced search & filters",
+        "cv": "Full candidate CV access",
+        "chat": "Direct chat with candidates",
+        "audio": "Audio introductions & ratings"
+      }
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Nevajobs — Premium winter jobs across Europe"
+  },
+  "pwa": {
+    "title": "Install Nevajobs",
+    "androidHint": "Add to your home screen for quick access to winter jobs.",
+    "iosHint": "Install this app on your iPhone: tap Share, then \"Add to Home Screen\".",
+    "iosAction": "Share → Add to Home Screen",
+    "install": "Install app",
+    "dismiss": "Dismiss"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to your Nevajobs account",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "Candidates join free · Companies publish free",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "countryOrigin": "Country of origin",
+    "countryHq": "Country / HQ",
+    "candidate": "Candidate",
+    "company": "Company",
+    "immediateAvailability": "Immediate availability / already in resort",
+    "euWorkPermit": "Authorized to work in the EU / EEA",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "or": "or",
+    "google": "Continue with Google",
+    "noAccount": "Don't have an account?",
+    "registerFree": "Register free",
+    "hasAccount": "Already have an account?",
+    "errors": {
+      "emailInUse": "This email is already registered.",
+      "invalidEmail": "Invalid email address.",
+      "weakPassword": "Password must be at least 6 characters.",
+      "invalidCredential": "Invalid email or password.",
+      "popupClosed": "Sign-in popup was closed.",
+      "tooManyRequests": "Too many attempts. Try again later.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "billing": {
+    "upgradeTitle": "Upgrade to Premium",
+    "upgradeSubtitle": "Unlock full candidate CVs, direct chat, voice intros and ratings.",
+    "perMonth": "/ month",
+    "billedMonthly": "Billed monthly · Cancel anytime",
+    "checkout": "Continue to secure checkout",
+    "stripeNote": "Powered by Stripe · You'll be redirected to complete payment",
+    "premiumCompaniesOnly": "Premium is only available for company accounts.",
+    "checkoutError": "Could not start checkout.",
+    "genericError": "Something went wrong. Please try again.",
+    "successTitle": "Welcome to Premium",
+    "successSubtitle": "Your subscription is active. You can now unlock full candidate profiles, chat directly and access voice intros.",
+    "backHome": "Back to homepage",
+    "cancelTitle": "Checkout cancelled",
+    "cancelSubtitle": "No charges were made. You can upgrade to Premium whenever you're ready to hire.",
+    "tryAgain": "Try again"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "it": "Italiano"
+  }
+}

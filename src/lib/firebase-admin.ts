@@ -26,7 +26,7 @@ function loadServiceAccount(): Record<string, unknown> {
   >;
 }
 
-function initAdmin(): App {
+export function initAdminApp(): App {
   if (getApps().length > 0) {
     return getApps()[0]!;
   }
@@ -35,6 +35,6 @@ function initAdmin(): App {
 }
 
 export function getAdminDb() {
-  initAdmin();
+  initAdminApp();
   return getFirestore();
 }

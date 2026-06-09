@@ -15,20 +15,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Nevajobs — Winter Season Jobs in Europe",
   description:
-    "Premium job portal for the private snow sector across the Alps & Pyrenees. Hotels, ski schools, rental shops and resort offices.",
+    "Premium job portal for the private snow sector across the Alps & Pyrenees.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+}: Readonly<{ children: React.ReactNode }>) {
+  return children;
 }
+
+export { geistSans, geistMono };

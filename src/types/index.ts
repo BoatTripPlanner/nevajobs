@@ -96,6 +96,10 @@ export interface Usuario {
   /** Media de valoraciones recibidas (0–5). Solo candidatos. */
   valoracion_media: number;
 
+  /** Stripe — gestionado por webhook (Admin SDK). */
+  stripe_customer_id?: string;
+  stripe_subscription_id?: string;
+
   /** Candidato: estación actual si ya está in resort. */
   estacion_actual?: string;
   /** Candidato: puesto o rol que busca. */

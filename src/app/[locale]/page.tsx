@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Navbar } from "@/components/home/Navbar";
 import { Hero } from "@/components/home/Hero";
 import { LiveStats } from "@/components/home/LiveStats";
@@ -11,6 +12,7 @@ import { getAvailableCandidates } from "@/lib/data/candidates";
 export const revalidate = 60;
 
 export default async function HomePage() {
+  const t = await getTranslations("footer");
   const [stats, jobs, candidates] = await Promise.all([
     getLiveStatsFresh(15),
     getActiveOfertas(),
@@ -18,7 +20,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-slate-50 text-slate-900">
       <Navbar />
       <main>
         <Hero />
@@ -27,8 +29,8 @@ export default async function HomePage() {
         <AvailableCandidates candidates={candidates} />
         <Pricing />
       </main>
-      <footer className="border-t border-white/5 px-4 py-8 text-center text-sm text-slate-500 sm:px-6 lg:px-8">
-        © {new Date().getFullYear()} Nevajobs — Premium winter jobs across Europe
+      <footer className="safe-bottom border-t border-slate-200 bg-white/60 px-4 py-6 text-center text-xs text-slate-500 sm:px-6 sm:py-8 sm:text-sm lg:px-8">
+        {t("copyright", { year: new Date().getFullYear() })}
       </footer>
     </div>
   );

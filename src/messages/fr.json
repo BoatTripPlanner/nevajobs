@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "signOut": "Déconnexion",
+    "goPremium": "Passer Premium",
+    "premium": "Premium"
+  },
+  "hero": {
+    "badge": "Secteur privé de la neige · Europe",
+    "titleBefore": "Trouvez votre prochain",
+    "titleHighlight": "job de saison",
+    "titleAfter": "en Europe",
+    "subtitle": "Le portail premium pour hôtels, écoles de ski privées, magasins de location et bureaux en station dans les Alpes et les Pyrénées. Pour les talents transfrontaliers — candidats gratuits, recruteurs plus efficaces."
+  },
+  "stats": {
+    "live": "Statistiques en direct",
+    "activeJobs": "Offres actives dans les Alpes et Pyrénées",
+    "availableCandidates": "Candidats disponibles",
+    "topCountries": "Pays qui recrutent le plus"
+  },
+  "search": {
+    "title": "Recherche avancée",
+    "country": "Pays",
+    "resort": "Station de ski",
+    "category": "Catégorie privée",
+    "language": "Langue requise",
+    "modality": "Modalité sportive",
+    "accommodation": "🏠 Logement inclus",
+    "couples": "🏠 Logement double / Couples bienvenus",
+    "submit": "Rechercher des emplois"
+  },
+  "filters": {
+    "allCountries": "Tous les pays",
+    "allResorts": "Toutes les stations",
+    "allCategories": "Toutes les catégories",
+    "anyLanguage": "Toute langue",
+    "anyModality": "Toute modalité",
+    "countries": {
+      "switzerland": "Suisse",
+      "france": "France",
+      "austria": "Autriche",
+      "italy": "Italie",
+      "spain": "Espagne",
+      "andorra": "Andorre",
+      "germany": "Allemagne"
+    },
+    "resorts": {
+      "zermatt": "Zermatt",
+      "chamonix": "Chamonix",
+      "verbier": "Verbier",
+      "sierra-nevada": "Sierra Nevada",
+      "st-anton": "St. Anton",
+      "cortina": "Cortina d'Ampezzo",
+      "val-disere": "Val d'Isère"
+    },
+    "categories": {
+      "hotels": "Hôtels et restauration",
+      "schools": "Écoles et clubs de ski",
+      "rental": "Magasins et location",
+      "office": "Bureau et gestion locale"
+    },
+    "languages": {
+      "en": "Anglais",
+      "fr": "Français",
+      "de": "Allemand",
+      "es": "Espagnol",
+      "it": "Italien"
+    },
+    "modalities": {
+      "ski": "Ski",
+      "snowboard": "Snowboard",
+      "both": "Ski et snowboard"
+    }
+  },
+  "jobs": {
+    "title": "Dernières opportunités",
+    "subtitle": "Postes du secteur privé dans les meilleures stations d'Europe",
+    "viewAll": "Voir toutes les offres →",
+    "emptyTitle": "Aucune offre ne correspond à votre recherche.",
+    "emptySubtitle": "Revenez bientôt — de nouvelles offres sont publiées chaque jour.",
+    "viewDetails": "Voir les détails",
+    "certificationRequired": "Certification requise",
+    "accommodationBadge": "🏠 Logement inclus",
+    "couplesBadge": "🏠 Logement double / Couples bienvenus",
+    "categories": {
+      "hotels": "Hôtels et restauration",
+      "schools": "Écoles de ski",
+      "rental": "Magasins et location",
+      "office": "Bureau et gestion"
+    }
+  },
+  "candidates": {
+    "emergencyBadge": "Interrupteur d'urgence",
+    "title": "Candidats disponibles maintenant",
+    "subtitle": "Flux employeur — départs en cours de saison et talents déjà en station, prêts à commencer.",
+    "viewAll": "Voir le flux complet →",
+    "emptyTitle": "Aucun candidat avec disponibilité immédiate pour le moment.",
+    "emptySubtitle": "Les candidats activant l'interrupteur d'urgence apparaissent ici automatiquement.",
+    "immediateInResort": "Disponibilité immédiate · En station",
+    "immediate": "Disponibilité immédiate",
+    "contact": "Contacter le candidat",
+    "flexibleLocation": "Localisation flexible",
+    "seasonalWorker": "Travailleur saisonnier"
+  },
+  "voice": {
+    "title": "Voice Intro ({seconds}s)",
+    "subtitle": "Passeport linguistique · vérifiez la fluidité avant de contacter",
+    "play": "Lire l'intro audio",
+    "pause": "Mettre en pause l'intro audio"
+  },
+  "pricing": {
+    "title": "Tarifs simples pour les employeurs",
+    "subtitle": "Les candidats rejoignent toujours gratuitement. Les entreprises publient gratuitement — débloquez les outils premium quand vous êtes prêt à recruter.",
+    "footnote": "Facturation saisonnière · Annulez à tout moment · Les candidats ne paient jamais",
+    "mostPopular": "Le plus populaire",
+    "free": {
+      "name": "Gratuit",
+      "price": "€0",
+      "period": "/ à vie",
+      "description": "Publiez des offres et touchez les talents saisonniers en Europe.",
+      "cta": "Commencer gratuitement",
+      "features": {
+        "post": "Publier des offres illimitées",
+        "browse": "Parcourir les aperçus candidats",
+        "search": "Recherche et filtres de base",
+        "cv": "Accès complet au CV",
+        "chat": "Chat direct avec les candidats",
+        "audio": "Intros audio et évaluations"
+      }
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€49",
+      "period": "/ mois",
+      "description": "Débloquez profils complets, chat et évaluations vérifiées.",
+      "cta": "Passer à Premium",
+      "features": {
+        "post": "Publier des offres illimitées",
+        "browse": "Parcourir les aperçus candidats",
+        "search": "Recherche et filtres avancés",
+        "cv": "Accès complet au CV",
+        "chat": "Chat direct avec les candidats",
+        "audio": "Intros audio et évaluations"
+      }
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Nevajobs — Emplois hivernaux premium en Europe"
+  },
+  "pwa": {
+    "title": "Installer Nevajobs",
+    "androidHint": "Ajoutez l'app à votre écran d'accueil pour un accès rapide.",
+    "iosHint": "Installez sur iPhone : Partager, puis « Sur l'écran d'accueil ».",
+    "iosAction": "Partager → Écran d'accueil",
+    "install": "Installer",
+    "dismiss": "Fermer"
+  },
+  "auth": {
+    "loginTitle": "Bon retour",
+    "loginSubtitle": "Connectez-vous à votre compte Nevajobs",
+    "registerTitle": "Créez votre compte",
+    "registerSubtitle": "Candidats gratuits · Entreprises publient gratuitement",
+    "email": "Email",
+    "password": "Mot de passe",
+    "fullName": "Nom complet",
+    "countryOrigin": "Pays d'origine",
+    "countryHq": "Pays / siège",
+    "candidate": "Candidat",
+    "company": "Entreprise",
+    "immediateAvailability": "Disponibilité immédiate / déjà en station",
+    "euWorkPermit": "Autorisé à travailler dans l'UE / EEE",
+    "signIn": "Se connecter",
+    "createAccount": "Créer un compte",
+    "or": "ou",
+    "google": "Continuer avec Google",
+    "noAccount": "Pas encore de compte ?",
+    "registerFree": "Inscription gratuite",
+    "hasAccount": "Déjà un compte ?",
+    "errors": {
+      "emailInUse": "Cet email est déjà enregistré.",
+      "invalidEmail": "Adresse email invalide.",
+      "weakPassword": "Le mot de passe doit contenir au moins 6 caractères.",
+      "invalidCredential": "Email ou mot de passe incorrect.",
+      "popupClosed": "La fenêtre de connexion a été fermée.",
+      "tooManyRequests": "Trop de tentatives. Réessayez plus tard.",
+      "generic": "Une erreur s'est produite. Réessayez."
+    }
+  },
+  "billing": {
+    "upgradeTitle": "Passer à Premium",
+    "upgradeSubtitle": "Débloquez les CV complets, le chat direct, les intros audio et les évaluations.",
+    "perMonth": "/ mois",
+    "billedMonthly": "Facturation mensuelle · Annulez à tout moment",
+    "checkout": "Continuer vers le paiement sécurisé",
+    "stripeNote": "Propulsé par Stripe · Vous serez redirigé pour payer",
+    "premiumCompaniesOnly": "Premium est réservé aux comptes entreprise.",
+    "checkoutError": "Impossible de démarrer le paiement.",
+    "genericError": "Une erreur s'est produite. Veuillez réessayer.",
+    "successTitle": "Bienvenue sur Premium",
+    "successSubtitle": "Votre abonnement est actif. Vous pouvez maintenant débloquer les profils complets, chatter directement et accéder aux intros audio.",
+    "backHome": "Retour à l'accueil",
+    "cancelTitle": "Paiement annulé",
+    "cancelSubtitle": "Aucun prélèvement n'a été effectué. Vous pouvez passer à Premium quand vous êtes prêt à recruter.",
+    "tryAgain": "Réessayer"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch",
+    "it": "Italiano"
+  }
+}

@@ -50,7 +50,7 @@ const serviceAccount = readFileSync(saPath, "utf8");
 console.log("→ Pushing env vars to Vercel...\n");
 
 for (const [key, value] of Object.entries(localEnv)) {
-  if (key.startsWith("NEXT_PUBLIC_")) {
+  if (key.startsWith("NEXT_PUBLIC_") || key.startsWith("STRIPE_")) {
     addEnv(key, value);
   }
 }

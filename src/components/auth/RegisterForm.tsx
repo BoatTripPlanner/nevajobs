@@ -1,27 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Loader2 } from "lucide-react";
 import {
-  getAuthErrorMessage,
+  getAuthErrorKey,
   loginWithGoogle,
   registerWithEmail,
 } from "@/lib/auth/auth-service";
 import type { RolUsuario } from "@/types";
 
-export function RegisterForm() {
+export function RegisterForm({
+  defaultRol,
+  redirectAfter,
+}: {
+  defaultRol?: RolUsuario;
+  redirectAfter?: string;
+}) {
+  const t = useTranslations("auth");
+  const tErrors = useTranslations("auth.errors");
   const router = useRouter();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [paisOrigen, setPaisOrigen] = useState("");
-  const [rol, setRol] = useState<RolUsuario>("candidato");
+  const [rol, setRol] = useState<RolUsuario>(defaultRol ?? "candidato");
   const [disponibilidadInmediata, setDisponibilidadInmediata] = useState(false);
   const [permisoTrabajoUe, setPermisoTrabajoUe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (defaultRol) setRol(defaultRol);
+  }, [defaultRol]);
+
+  function afterAuthRedirect() {
+    router.push(redirectAfter ?? "/");
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,10 +53,10 @@ export function RegisterForm() {
         disponibilidad_inmediata: rol === "candidato" ? disponibilidadInmediata : false,
         permiso_trabajo_ue: rol === "candidato" ? permisoTrabajoUe : false,
       });
-      router.push("/");
+      afterAuthRedirect();
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
-      setError(getAuthErrorMessage(code));
+      setError(tErrors(getAuthErrorKey(code)));
     } finally {
       setLoading(false);
     }
@@ -51,10 +67,10 @@ export function RegisterForm() {
     setError(null);
     try {
       await loginWithGoogle(rol);
-      router.push("/");
+      afterAuthRedirect();
     } catch (err) {
       const code = (err as { code?: string }).code ?? "";
-      setError(getAuthErrorMessage(code));
+      setError(tErrors(getAuthErrorKey(code)));
     } finally {
       setLoading(false);
     }
@@ -62,31 +78,29 @@ export function RegisterForm() {
 
   return (
     <div className="w-full max-w-md">
-      <h1 className="text-2xl font-bold text-white">Create your account</h1>
-      <p className="mt-2 text-sm text-slate-400">
-        Candidates join free · Companies publish free
-      </p>
+      <h1 className="text-2xl font-bold text-slate-900">{t("registerTitle")}</h1>
+      <p className="mt-2 text-sm text-slate-600">{t("registerSubtitle")}</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         {error && (
-          <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </p>
         )}
 
-        <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-slate-950/50 p-1">
+        <div className="grid grid-cols-2 gap-2 rounded-xl border border-slate-200 bg-slate-50 p-1">
           <RoleButton active={rol === "candidato"} onClick={() => setRol("candidato")}>
-            Candidate
+            {t("candidate")}
           </RoleButton>
           <RoleButton active={rol === "empresa"} onClick={() => setRol("empresa")}>
-            Company
+            {t("company")}
           </RoleButton>
         </div>
 
-        <Field label="Full name" value={nombre} onChange={setNombre} required />
-        <Field label="Email" type="email" value={email} onChange={setEmail} required />
+        <Field label={t("fullName")} value={nombre} onChange={setNombre} required />
+        <Field label={t("email")} type="email" value={email} onChange={setEmail} required />
         <Field
-          label="Password"
+          label={t("password")}
           type="password"
           value={password}
           onChange={setPassword}
@@ -94,23 +108,23 @@ export function RegisterForm() {
           minLength={6}
         />
         <Field
-          label={rol === "empresa" ? "Country / HQ" : "Country of origin"}
+          label={rol === "empresa" ? t("countryHq") : t("countryOrigin")}
           value={paisOrigen}
           onChange={setPaisOrigen}
           required
         />
 
         {rol === "candidato" && (
-          <div className="space-y-2 rounded-xl border border-white/10 bg-slate-950/40 p-4">
+          <div className="space-y-2 rounded-xl border border-slate-200 bg-sky-50/50 p-4">
             <Checkbox
               checked={disponibilidadInmediata}
               onChange={setDisponibilidadInmediata}
-              label="Immediate availability / already in resort"
+              label={t("immediateAvailability")}
             />
             <Checkbox
               checked={permisoTrabajoUe}
               onChange={setPermisoTrabajoUe}
-              label="Authorized to work in the EU / EEA"
+              label={t("euWorkPermit")}
             />
           </div>
         )}
@@ -118,32 +132,32 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 py-3 text-sm font-semibold text-white transition hover:from-cyan-400 hover:to-sky-500 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 py-3 text-sm font-semibold text-white transition hover:from-cyan-600 hover:to-sky-700 disabled:opacity-60"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-          Create account
+          {t("createAccount")}
         </button>
       </form>
 
       <div className="my-6 flex items-center gap-3">
-        <div className="h-px flex-1 bg-white/10" />
-        <span className="text-xs text-slate-500">or</span>
-        <div className="h-px flex-1 bg-white/10" />
+        <div className="h-px flex-1 bg-slate-200" />
+        <span className="text-xs text-slate-400">{t("or")}</span>
+        <div className="h-px flex-1 bg-slate-200" />
       </div>
 
       <button
         type="button"
         onClick={handleGoogle}
         disabled={loading}
-        className="w-full rounded-xl border border-white/15 py-3 text-sm font-medium text-slate-200 transition hover:bg-white/5 disabled:opacity-60"
+        className="w-full rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-sky-50 disabled:opacity-60"
       >
-        Continue with Google
+        {t("google")}
       </button>
 
-      <p className="mt-6 text-center text-sm text-slate-400">
-        Already have an account?{" "}
-        <Link href="/login" className="font-medium text-cyan-400 hover:text-cyan-300">
-          Sign in
+      <p className="mt-6 text-center text-sm text-slate-600">
+        {t("hasAccount")}{" "}
+        <Link href="/login" className="font-medium text-cyan-600 hover:text-cyan-700">
+          {t("signIn")}
         </Link>
       </p>
     </div>
@@ -165,8 +179,8 @@ function RoleButton({
       onClick={onClick}
       className={`rounded-lg py-2.5 text-sm font-medium transition ${
         active
-          ? "bg-cyan-500/20 text-cyan-200"
-          : "text-slate-400 hover:text-slate-200"
+          ? "bg-cyan-100 text-cyan-800"
+          : "text-slate-500 hover:text-slate-700"
       }`}
     >
       {children}
@@ -191,7 +205,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-400">
+      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
       </span>
       <input
@@ -200,7 +214,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         required={required}
         minLength={minLength}
-        className="w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
       />
     </label>
   );
@@ -221,9 +235,9 @@ function Checkbox({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-800 text-cyan-500"
+        className="mt-0.5 h-4 w-4 rounded border-slate-300 text-cyan-600"
       />
-      <span className="text-sm text-slate-300">{label}</span>
+      <span className="text-sm text-slate-700">{label}</span>
     </label>
   );
 }

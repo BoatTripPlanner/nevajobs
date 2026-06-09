@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface VoiceIntroPlayerProps {
   duration?: number;
@@ -12,6 +13,7 @@ export function VoiceIntroPlayer({
   duration = 30,
   audioUrl,
 }: VoiceIntroPlayerProps) {
+  const t = useTranslations("voice");
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -53,7 +55,7 @@ export function VoiceIntroPlayer({
   }
 
   return (
-    <div className="rounded-xl border border-violet-500/20 bg-violet-500/5 p-3">
+    <div className="rounded-xl border border-violet-200 bg-violet-50 p-3">
       {audioUrl && (
         <audio
           ref={audioRef}
@@ -75,8 +77,8 @@ export function VoiceIntroPlayer({
         <button
           type="button"
           onClick={togglePlay}
-          aria-label={playing ? "Pause voice intro" : "Play voice intro"}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-md shadow-violet-500/25 transition hover:from-violet-400 hover:to-fuchsia-500"
+          aria-label={playing ? t("pause") : t("play")}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-sm transition hover:from-violet-600 hover:to-fuchsia-600"
         >
           {playing ? (
             <Pause className="h-4 w-4" />
@@ -86,13 +88,11 @@ export function VoiceIntroPlayer({
         </button>
 
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold text-violet-200">
-            Voice Intro ({duration}s)
+          <p className="text-xs font-semibold text-violet-800">
+            {t("title", { seconds: duration })}
           </p>
-          <p className="truncate text-[10px] text-slate-500">
-            Language passport · verify fluency before contact
-          </p>
-          <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-slate-800">
+          <p className="truncate text-[10px] text-slate-500">{t("subtitle")}</p>
+          <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-violet-100">
             <div
               className="h-full rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 transition-all duration-300"
               style={{ width: `${progress}%` }}

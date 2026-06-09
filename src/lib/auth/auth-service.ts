@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut as firebaseSignOut,
   updateProfile,
   type User,
 } from "firebase/auth";
@@ -129,14 +130,27 @@ export async function loginWithGoogle(
   return user;
 }
 
-export function getAuthErrorMessage(code: string): string {
-  const messages: Record<string, string> = {
-    "auth/email-already-in-use": "This email is already registered.",
-    "auth/invalid-email": "Invalid email address.",
-    "auth/weak-password": "Password must be at least 6 characters.",
-    "auth/invalid-credential": "Invalid email or password.",
-    "auth/popup-closed-by-user": "Sign-in popup was closed.",
-    "auth/too-many-requests": "Too many attempts. Try again later.",
+export async function signOut(): Promise<void> {
+  await firebaseSignOut(auth);
+}
+
+export type AuthErrorKey =
+  | "emailInUse"
+  | "invalidEmail"
+  | "weakPassword"
+  | "invalidCredential"
+  | "popupClosed"
+  | "tooManyRequests"
+  | "generic";
+
+export function getAuthErrorKey(code: string): AuthErrorKey {
+  const keys: Record<string, AuthErrorKey> = {
+    "auth/email-already-in-use": "emailInUse",
+    "auth/invalid-email": "invalidEmail",
+    "auth/weak-password": "weakPassword",
+    "auth/invalid-credential": "invalidCredential",
+    "auth/popup-closed-by-user": "popupClosed",
+    "auth/too-many-requests": "tooManyRequests",
   };
-  return messages[code] ?? "Something went wrong. Please try again.";
+  return keys[code] ?? "generic";
 }

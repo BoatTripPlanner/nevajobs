@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Home, Heart, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
-  europeanCountries,
-  skiResorts,
-  privateCategories,
-  requiredLanguages,
-  sportModalities,
-} from "@/lib/data/home-data";
+  europeanCountryKeys,
+  privateCategoryKeys,
+  requiredLanguageKeys,
+  skiResortKeys,
+  sportModalityKeys,
+} from "@/lib/data/filter-keys";
 import type { JobSearchFilters } from "@/types/job";
 
 interface JobSearchProps {
@@ -26,7 +27,54 @@ const initialFilters: JobSearchFilters = {
 };
 
 export function JobSearch({ onSearch }: JobSearchProps) {
+  const t = useTranslations("search");
+  const tFilters = useTranslations("filters");
   const [filters, setFilters] = useState<JobSearchFilters>(initialFilters);
+
+  const countryOptions = useMemo(
+    () =>
+      europeanCountryKeys.map((key) => ({
+        value: key,
+        label: key ? tFilters(`countries.${key}`) : tFilters("allCountries"),
+      })),
+    [tFilters],
+  );
+
+  const resortOptions = useMemo(
+    () =>
+      skiResortKeys.map((key) => ({
+        value: key,
+        label: key ? tFilters(`resorts.${key}`) : tFilters("allResorts"),
+      })),
+    [tFilters],
+  );
+
+  const categoryOptions = useMemo(
+    () =>
+      privateCategoryKeys.map((key) => ({
+        value: key,
+        label: key ? tFilters(`categories.${key}`) : tFilters("allCategories"),
+      })),
+    [tFilters],
+  );
+
+  const languageOptions = useMemo(
+    () =>
+      requiredLanguageKeys.map((key) => ({
+        value: key,
+        label: key ? tFilters(`languages.${key}`) : tFilters("anyLanguage"),
+      })),
+    [tFilters],
+  );
+
+  const modalityOptions = useMemo(
+    () =>
+      sportModalityKeys.map((key) => ({
+        value: key,
+        label: key ? tFilters(`modalities.${key}`) : tFilters("anyModality"),
+      })),
+    [tFilters],
+  );
 
   const showSportModality = filters.category === "schools";
 
@@ -49,56 +97,56 @@ export function JobSearch({ onSearch }: JobSearchProps) {
   }
 
   return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
+    <section className="px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 shadow-xl backdrop-blur sm:p-8"
+          className="rounded-2xl border border-slate-200 bg-white p-4 shadow-lg shadow-slate-200/40 sm:p-8"
         >
-          <h2 className="mb-6 text-lg font-semibold text-white">
-            Advanced job search
+          <h2 className="mb-4 text-base font-semibold text-slate-900 sm:mb-6 sm:text-lg">
+            {t("title")}
           </h2>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <SelectField
-              label="Country"
+              label={t("country")}
               value={filters.country}
               onChange={(v) => updateFilter("country", v)}
-              options={europeanCountries}
+              options={countryOptions}
             />
             <SelectField
-              label="Ski resort"
+              label={t("resort")}
               value={filters.resort}
               onChange={(v) => updateFilter("resort", v)}
-              options={skiResorts}
+              options={resortOptions}
             />
             <SelectField
-              label="Private category"
+              label={t("category")}
               value={filters.category}
               onChange={(v) => updateFilter("category", v)}
-              options={privateCategories}
+              options={categoryOptions}
             />
             <SelectField
-              label="Required language"
+              label={t("language")}
               value={filters.language}
               onChange={(v) => updateFilter("language", v)}
-              options={requiredLanguages}
+              options={languageOptions}
             />
 
             {showSportModality && (
               <SelectField
-                label="Sport modality"
+                label={t("modality")}
                 value={filters.sportModality}
                 onChange={(v) => updateFilter("sportModality", v)}
-                options={sportModalities}
+                options={modalityOptions}
               />
             )}
 
             <div className="flex items-end sm:col-span-2 lg:col-span-1">
-              <label className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-3 transition hover:border-cyan-400/50">
-                <span className="flex items-center gap-2 text-sm font-medium text-cyan-100">
-                  <Home className="h-4 w-4 shrink-0 text-cyan-300" />
-                  <span>🏠 Accommodation included</span>
+              <label className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-3 transition hover:border-cyan-300 hover:bg-cyan-100/60 sm:gap-3 sm:px-4">
+                <span className="flex min-w-0 items-center gap-2 text-xs font-medium text-cyan-800 sm:text-sm">
+                  <Home className="h-4 w-4 shrink-0 text-cyan-600" />
+                  <span className="leading-snug">{t("accommodation")}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -106,16 +154,16 @@ export function JobSearch({ onSearch }: JobSearchProps) {
                   onChange={(e) =>
                     updateFilter("accommodationIncluded", e.target.checked)
                   }
-                  className="h-5 w-5 shrink-0 rounded border-cyan-400/50 bg-slate-800 text-cyan-500 focus:ring-cyan-500/50"
+                  className="h-5 w-5 shrink-0 rounded border-cyan-300 text-cyan-600 focus:ring-cyan-500/30"
                 />
               </label>
             </div>
 
             <div className="flex items-end sm:col-span-2 lg:col-span-1">
-              <label className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 transition hover:border-rose-400/50">
-                <span className="flex items-center gap-2 text-sm font-medium text-rose-100">
-                  <Heart className="h-4 w-4 shrink-0 text-rose-300" />
-                  <span>🏠 Double accommodation / Couples welcome</span>
+              <label className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-3 transition hover:border-rose-300 hover:bg-rose-100/60 sm:gap-3 sm:px-4">
+                <span className="flex min-w-0 items-center gap-2 text-xs font-medium text-rose-800 sm:text-sm">
+                  <Heart className="h-4 w-4 shrink-0 text-rose-500" />
+                  <span className="leading-snug">{t("couples")}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -123,7 +171,7 @@ export function JobSearch({ onSearch }: JobSearchProps) {
                   onChange={(e) =>
                     updateFilter("couplesWelcome", e.target.checked)
                   }
-                  className="h-5 w-5 shrink-0 rounded border-rose-400/50 bg-slate-800 text-rose-500 focus:ring-rose-500/50"
+                  className="h-5 w-5 shrink-0 rounded border-rose-300 text-rose-500 focus:ring-rose-500/30"
                 />
               </label>
             </div>
@@ -131,10 +179,10 @@ export function JobSearch({ onSearch }: JobSearchProps) {
 
           <button
             type="submit"
-            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-400 hover:to-sky-500 sm:w-auto"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-cyan-500/20 transition hover:from-cyan-600 hover:to-sky-700 sm:w-auto"
           >
             <Search className="h-4 w-4" />
-            Search jobs
+            {t("submit")}
           </button>
         </form>
       </div>
@@ -155,16 +203,16 @@ function SelectField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-400">
+      <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
         {label}
       </span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 sm:px-4 sm:py-3 sm:text-sm"
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option key={opt.value || "__all__"} value={opt.value}>
             {opt.label}
           </option>
         ))}
